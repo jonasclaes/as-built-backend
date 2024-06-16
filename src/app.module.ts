@@ -1,9 +1,25 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ClientsModule } from './clients/clients.module';
+import { TenancyModule } from './tenancy/tenancy.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { ProjectsModule } from './projects/projects.module';
+import { TenantsModule } from './tenants/tenants.module';
+import { ormConfig } from './typeorm/orm.config';
+import { MultiTenancyModule } from './multi-tenancy/multi-tenancy.module';
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRoot({ ...ormConfig, synchronize: false }),
+    ClientsModule,
+    TenancyModule,
+    ProjectsModule,
+    TenantsModule,
+    MultiTenancyModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
