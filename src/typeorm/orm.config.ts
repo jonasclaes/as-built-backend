@@ -6,7 +6,6 @@ import { Project } from '../projects/entities/project.entity';
 
 export const ormConfig = {
   type: 'postgres',
-  url: 'postgresql://jonasclaes:ZiwsxNX2t4Fd@ep-bold-bar-a2hseuec.eu-central-1.aws.neon.tech/nest?sslmode=require',
   entities: [Tenant, Client, Project],
   migrations: [join(__dirname, '../migrations/**/*.{ts,js}')],
   synchronize: false,

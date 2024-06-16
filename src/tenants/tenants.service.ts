@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Tenant } from './entities/tenant.entity';
 import { DataSource, Repository } from 'typeorm';
 import ormConfig from 'src/typeorm/orm.config';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class TenantsService {
@@ -13,6 +14,8 @@ export class TenantsService {
     private readonly tenantRepository: Repository<Tenant>,
     @InjectDataSource()
     private readonly dataSource: DataSource,
+    @Inject()
+    private readonly configService: ConfigService,
   ) {}
 
   async create(createTenantDto: CreateTenantDto) {
@@ -20,11 +23,13 @@ export class TenantsService {
       .createQueryRunner()
       .createDatabase(createTenantDto.name, false);
 
-    // FIXME: Add proper URL parsing logic to replace any database name with the tenant name
-    createTenantDto.connectionString = ormConfig.url.replace(
-      'nest',
-      createTenantDto.name,
+    const systemDatabaseUrl = new URL(
+      this.configService.get('DATABASE_URL') ?? '',
     );
+
+    systemDatabaseUrl.pathname = `/${createTenantDto.name}`;
+
+    createTenantDto.connectionString = systemDatabaseUrl.toString();
 
     return await this.tenantRepository.save(createTenantDto);
   }
