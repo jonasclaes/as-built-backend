@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TenantsService } from './tenants.service';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { getDataSourceToken, getRepositoryToken } from '@nestjs/typeorm';
 import { Tenant } from './entities/tenant.entity';
+import { ConfigService } from '@nestjs/config';
 
 describe('TenantsService', () => {
   let service: TenantsService;
@@ -12,6 +13,14 @@ describe('TenantsService', () => {
         TenantsService,
         {
           provide: getRepositoryToken(Tenant),
+          useValue: {},
+        },
+        {
+          provide: getDataSourceToken(),
+          useValue: {},
+        },
+        {
+          provide: ConfigService,
           useValue: {},
         },
       ],
