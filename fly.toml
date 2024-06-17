@@ -8,6 +8,9 @@ primary_region = 'ams'
 
 [build]
 
+[deploy]
+release_command = "npm run typeorm:main migration:run"
+
 [http_service]
   internal_port = 3000
   force_https = true
