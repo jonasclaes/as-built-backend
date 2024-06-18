@@ -22,3 +22,8 @@ release_command = "npm run typeorm:main migration:run"
 [[vm]]
   size = 'shared-cpu-1x'
   memory = "512M"
+
+[[restart]]
+  policy = "on-failure"
+  retries = 10
+  processes = ['app']
