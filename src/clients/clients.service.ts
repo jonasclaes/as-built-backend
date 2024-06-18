@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
 import { InjectTenantRepository } from '../tenancy/tenancy.decorators';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class ClientsService {
   constructor(
     @InjectTenantRepository(Client)

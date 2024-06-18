@@ -18,7 +18,7 @@ describe('ProjectsService', () => {
       ],
     }).compile();
 
-    service = module.get<ProjectsService>(ProjectsService);
+    service = await module.resolve<ProjectsService>(ProjectsService);
   });
 
   it('should be defined', () => {

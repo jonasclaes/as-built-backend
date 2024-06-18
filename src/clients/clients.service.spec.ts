@@ -25,7 +25,7 @@ describe('ClientsService', () => {
       ],
     }).compile();
 
-    service = module.get<ClientsService>(ClientsService);
+    service = await module.resolve<ClientsService>(ClientsService);
     repositoryMock = module.get(
       getRepositoryToken(Client, TENANT_DATA_SOURCE_NAME),
     );
