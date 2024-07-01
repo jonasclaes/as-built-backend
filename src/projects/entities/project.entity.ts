@@ -1,3 +1,4 @@
+import { Client } from '../../clients/entities/client.entity';
 import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
@@ -5,6 +6,7 @@ import {
   DeleteDateColumn,
   Column,
   Entity,
+  ManyToOne,
 } from 'typeorm';
 
 @Entity()
@@ -23,4 +25,7 @@ export class Project {
 
   @Column()
   name: string;
+
+  @ManyToOne(() => Client, (client) => client.projects)
+  client: Client;
 }
