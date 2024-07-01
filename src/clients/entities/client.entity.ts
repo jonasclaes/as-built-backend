@@ -1,8 +1,10 @@
+import { Project } from '../../projects/entities/project.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -23,4 +25,7 @@ export class Client {
 
   @Column()
   name: string;
+
+  @OneToMany(() => Project, (project) => project.client)
+  projects: Project[];
 }

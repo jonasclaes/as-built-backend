@@ -8,7 +8,7 @@ export const ormConfig = {
   type: 'postgres',
   entities: [Tenant, Client, Project],
   migrations: [join(__dirname, '../migrations/**/*.{ts,js}')],
-  synchronize: false,
+  synchronize: true,
 } satisfies DataSourceOptions;
 
 export default ormConfig;
