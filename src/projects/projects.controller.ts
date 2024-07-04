@@ -6,15 +6,11 @@ import {
   Patch,
   Param,
   Delete,
-  Put,
 } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ApiHeader } from '@nestjs/swagger';
-import { AddProjectToClientDto } from './dto/add-project-to-client.dto';
-import { Project } from './entities/project.entity';
-
 @ApiHeader({
   name: 'x-tenant-id',
   description: 'Tenant ID',
@@ -46,11 +42,5 @@ export class ProjectsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.projectsService.remove(+id);
-  }
-  @Put('add-to-client')
-  addProjectToClient(
-    @Body() addProjectToClientDto: AddProjectToClientDto,
-  ): Promise<Project> {
-    return this.projectsService.addProjectToClient(addProjectToClientDto);
   }
 }
