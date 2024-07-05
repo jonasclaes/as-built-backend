@@ -4,7 +4,7 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectTenantRepository } from '../tenancy/tenancy.decorators';
 import { Project } from './entities/project.entity';
 import { Repository } from 'typeorm';
-import { Client } from 'src/clients/entities/client.entity';
+import { Client } from '../clients/entities/client.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class ProjectsService {

@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ClientDto } from '../..//clients/dto/client.dto';
+import { Client } from '../../clients/entities/client.entity';
 
 export class CreateProjectDto {
   @ApiProperty()
   name: string;
-  @ApiProperty({ type: ClientDto })
-  client: ClientDto;
+  @ApiProperty({ type: Client, properties: { id: { type: 'number' } } })
+  client: { id: number };
 }
