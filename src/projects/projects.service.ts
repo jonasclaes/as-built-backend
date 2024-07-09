@@ -4,12 +4,15 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectTenantRepository } from '../tenancy/tenancy.decorators';
 import { Project } from './entities/project.entity';
 import { Repository } from 'typeorm';
+import { Client } from '../clients/entities/client.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class ProjectsService {
   constructor(
     @InjectTenantRepository(Project)
     private readonly projectRepository: Repository<Project>,
+    @InjectTenantRepository(Client)
+    private readonly clientRepository: Repository<Client>,
   ) {}
 
   create(createProjectDto: CreateProjectDto) {
