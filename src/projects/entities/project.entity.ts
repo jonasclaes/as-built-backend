@@ -1,3 +1,4 @@
+import { Revision } from '../../revisions/entities/revision.entity';
 import { Client } from '../../clients/entities/client.entity';
 import {
   PrimaryGeneratedColumn,
@@ -7,6 +8,7 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -28,4 +30,7 @@ export class Project {
 
   @ManyToOne(() => Client, (client) => client.projects)
   client: Client;
+
+  @OneToMany(() => Revision, (revision) => revision.project)
+  revisions: Revision[];
 }

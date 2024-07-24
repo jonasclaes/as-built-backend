@@ -9,6 +9,10 @@ import { ProjectsModule } from './projects/projects.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { ormConfig } from './typeorm/orm.config';
 import { MultiTenancyModule } from './multi-tenancy/multi-tenancy.module';
+import { RevisionsController } from './revisions/revisions.controller';
+import { RevisionsModule } from './revisions/revisions.module';
+import { RevisionsService } from './revisions/revisions.service';
+import { RevisionsController } from './revisions/revisions.controller';
 
 @Module({
   imports: [
@@ -27,8 +31,9 @@ import { MultiTenancyModule } from './multi-tenancy/multi-tenancy.module';
     ProjectsModule,
     TenantsModule,
     MultiTenancyModule,
+    RevisionsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, RevisionsController],
+  providers: [AppService, RevisionsService],
 })
 export class AppModule {}
