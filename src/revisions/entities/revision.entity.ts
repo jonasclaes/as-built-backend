@@ -14,9 +14,6 @@ export class Revision {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  name: string;
-
   @CreateDateColumn()
   createdAt: Date;
 
@@ -25,6 +22,9 @@ export class Revision {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @Column()
+  name: string;
 
   @ManyToOne(() => Project, (project) => project.revisions)
   project: Project;

@@ -24,14 +24,22 @@ export class RevisionsController {
   create(@Body() createRevisionDto: CreateRevisionDto) {
     return this.revisionsService.create(createRevisionDto);
   }
+
   @Get()
   findAll() {
     return this.revisionsService.findAll();
   }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.revisionsService.findOne(+id);
   }
+
+  @Get('project/:projectId')
+  findAllForProject(@Param('projectId') projectId: string) {
+    return this.revisionsService.findAllForProject(+projectId);
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -39,6 +47,7 @@ export class RevisionsController {
   ) {
     return this.revisionsService.update(+id, updateRevisionDto);
   }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.revisionsService.remove(+id);

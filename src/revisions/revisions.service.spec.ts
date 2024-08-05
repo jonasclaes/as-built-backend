@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { RevisionsService } from './revisions.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Revision } from './entities/revision.entity';
-import { TENANT_DATA_SOURCE_NAME } from 'src/tenancy/tenancy.module';
+import { TENANT_DATA_SOURCE_NAME } from '../tenancy/tenancy.module';
 
 describe('RevisionsService', () => {
   let service: RevisionsService;
