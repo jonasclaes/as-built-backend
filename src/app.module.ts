@@ -9,7 +9,6 @@ import { ProjectsModule } from './projects/projects.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { ormConfig } from './typeorm/orm.config';
 import { MultiTenancyModule } from './multi-tenancy/multi-tenancy.module';
-
 import { RevisionsModule } from './revisions/revisions.module';
 
 @Module({
