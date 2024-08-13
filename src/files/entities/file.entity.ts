@@ -1,4 +1,3 @@
-import { Revision } from 'src/revisions/entities/revision.entity';
 import {
   Column,
   CreateDateColumn,
@@ -9,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Revision } from '../../revisions/entities/revision.entity';
 
 @Entity()
 export class File {
@@ -28,7 +28,7 @@ export class File {
   name: string;
 
   @Column()
-  s3Key: string;
+  s3Key: string; // Store the S3 key of the file
 
   @ManyToMany(() => Revision, (revision) => revision.files)
   @JoinTable()
