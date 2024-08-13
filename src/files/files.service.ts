@@ -1,26 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
+import { InjectTenantRepository } from '../tenancy/tenancy.decorators';
+import { Repository } from 'typeorm';
+import { File } from './entities/file.entity';
 
 @Injectable()
 export class FilesService {
+  constructor(
+    @InjectTenantRepository(File)
+    private readonly filesRepository: Repository<File>,
+  ) {}
+
   create(createFileDto: CreateFileDto) {
-    return 'This action adds a new file';
+    return this.filesRepository.save(createFileDto);
   }
 
   findAll() {
-    return `This action returns all files`;
+    return this.filesRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} file`;
+    return this.filesRepository.findOneBy({ id });
   }
 
   update(id: number, updateFileDto: UpdateFileDto) {
-    return `This action updates a #${id} file`;
+    return this.filesRepository.update(id, updateFileDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} file`;
+    return this.filesRepository.delete(id);
   }
 }

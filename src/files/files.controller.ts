@@ -1,8 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
+import { ApiHeader } from '@nestjs/swagger';
 
+@ApiHeader({
+  name: 'x-tenant-id',
+  description: 'Tenant ID',
+})
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
