@@ -1,8 +1,11 @@
+import { Revision } from 'src/revisions/entities/revision.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -23,4 +26,11 @@ export class File {
 
   @Column()
   name: string;
+
+  @Column()
+  s3Key: string;
+
+  @ManyToMany(() => Revision, (revision) => revision.files)
+  @JoinTable()
+  revisions: Revision[];
 }
