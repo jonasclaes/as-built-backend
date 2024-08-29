@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -32,5 +33,6 @@ export class Revision {
   project: Project;
 
   @ManyToMany(() => File, (file) => file.revisions)
+  @JoinTable()
   files: File[];
 }

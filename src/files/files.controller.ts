@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
-import { ApiHeader } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiHeader } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiHeader({
   name: 'x-tenant-id',
@@ -23,6 +26,24 @@ export class FilesController {
   @Post()
   create(@Body() createFileDto: CreateFileDto) {
     return this.filesService.create(createFileDto);
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
   }
 
   @Get()
