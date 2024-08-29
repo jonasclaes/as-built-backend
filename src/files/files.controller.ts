@@ -24,11 +24,6 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
   @Post()
-  create(@Body() createFileDto: CreateFileDto) {
-    return this.filesService.create(createFileDto);
-  }
-
-  @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
@@ -42,8 +37,15 @@ export class FilesController {
       },
     },
   })
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    await this.filesService.upload(file.originalname, file.buffer);
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createFileDto: CreateFileDto,
+  ) {
+    await this.filesService.create(
+      file.originalname,
+      file.buffer,
+      createFileDto,
+    );
   }
 
   @Get()

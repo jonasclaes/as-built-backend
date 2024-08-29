@@ -19,24 +19,22 @@ export class FilesService {
     private readonly configService: ConfigService,
   ) {}
 
-  create(createFileDto: CreateFileDto) {
-    return this.filesRepository.save(createFileDto);
-  }
-
-  async upload(fileName: string, file: Buffer) {
+  async create(fileName: string, fileBuffer: Buffer, fileDto: CreateFileDto) {
     const uploadParams = {
-      Bucket: this.configService.get<string>('AWS_S3_BUCKET_NAME'), // Ensure this is correctly set in your config
+      Bucket: this.configService.getOrThrow<string>('AWS_S3_BUCKET_NAME'),
       Key: fileName,
-      Body: file,
+      Body: fileBuffer,
     };
     try {
-      const result = await this.s3Client.send(
-        new PutObjectCommand(uploadParams),
-      );
-      console.log('S3 upload result:', result);
+      await this.s3Client.send(new PutObjectCommand(uploadParams));
+      const newFile = this.filesRepository.create({
+        ...fileDto,
+        name: fileName,
+        s3Key: fileName,
+      });
+      return await this.filesRepository.save(newFile);
     } catch (error) {
-      console.error('Error uploading file to S3:', error);
-      throw new Error('File upload to S3 failed');
+      throw new Error(`Failed to upload file to S3: ${error}`);
     }
   }
 
