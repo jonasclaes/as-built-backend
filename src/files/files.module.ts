@@ -4,9 +4,10 @@ import { FilesController } from './files.controller';
 import { TenancyOrmModule } from '../tenancy/tenancyOrm.module';
 import { File } from './entities/file.entity';
 import { Revision } from '../revisions/entities/revision.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [TenancyOrmModule.forFeature([File, Revision])],
+  imports: [TenancyOrmModule.forFeature([File, Revision]), ConfigModule],
   controllers: [FilesController],
   providers: [FilesService],
 })
