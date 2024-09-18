@@ -30,7 +30,7 @@ export class FilesService {
       const newFile = this.filesRepository.create({
         ...fileDto,
         name: fileName,
-        s3Key: fileName,
+        path: fileName,
       });
       return await this.filesRepository.save(newFile);
     } catch (error) {

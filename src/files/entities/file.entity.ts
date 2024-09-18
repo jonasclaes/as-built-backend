@@ -28,7 +28,7 @@ export class File {
   name: string;
 
   @Column()
-  s3Key: string; // Store the S3 key of the file
+  path: string;
 
   @ManyToMany(() => Revision, (revision) => revision.files)
   @JoinTable()
