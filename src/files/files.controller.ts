@@ -8,6 +8,8 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
@@ -34,21 +36,33 @@ export class FilesController {
           type: 'string',
           format: 'binary',
         },
-        revisionId: {
-          type: 'string',
-        },
       },
     },
   })
-  uploadFile(
+  async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Body() createFileDto: CreateFileDto,
   ) {
-    return this.filesService.uploadFile(
-      file.originalname,
-      file.buffer,
-      createFileDto,
-    );
+    if (!file || !createFileDto) {
+      throw new HttpException(
+        'File and file metadata are required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    try {
+      return await this.filesService.uploadFile(
+        file.originalname,
+        file.buffer,
+        createFileDto,
+        file.mimetype,
+      );
+    } catch (error) {
+      throw new HttpException(
+        `Failed to upload file: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Get()
