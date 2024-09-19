@@ -36,6 +36,9 @@ export class FilesController {
           type: 'string',
           format: 'binary',
         },
+        revisionId: {
+          type: 'number',
+        },
       },
     },
   })

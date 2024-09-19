@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { File } from './entities/file.entity';
 import { ConfigService } from '@nestjs/config';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { Revision } from '../revisions/entities/revision.entity';
 
 @Injectable()
 export class FilesService {
@@ -47,15 +48,26 @@ export class FilesService {
       await this.s3Client.send(new PutObjectCommand(uploadParams));
 
       const fileUri = this.getS3FileUri(bucketName, fileName);
-
       const newFile = this.filesRepository.create({
-        ...fileDto,
         name: fileName,
         path: fileUri,
       });
-      return await this.filesRepository.save(newFile);
+
+      const savedFile = await this.filesRepository.save(newFile);
+
+      const revision = await this.filesRepository.manager.findOneBy(Revision, {
+        id: fileDto.revisionId,
+      });
+      if (!revision) {
+        throw new Error(`Revision with ID ${fileDto.revisionId} not found`);
+      }
+
+      savedFile.revisions = [revision];
+      await this.filesRepository.save(savedFile);
+
+      return savedFile;
     } catch (error) {
-      throw new Error(`Failed to upload file to S3: ${error.message}`);
+      throw new Error(`Failed to upload file: ${error.message}`);
     }
   }
 
