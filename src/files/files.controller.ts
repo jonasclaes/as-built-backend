@@ -34,14 +34,17 @@ export class FilesController {
           type: 'string',
           format: 'binary',
         },
+        revisionId: {
+          type: 'string',
+        },
       },
     },
   })
-  async create(
+  uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @Body() createFileDto: CreateFileDto,
   ) {
-    await this.filesService.create(
+    return this.filesService.uploadFile(
       file.originalname,
       file.buffer,
       createFileDto,
