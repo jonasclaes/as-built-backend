@@ -31,6 +31,6 @@ export class File {
   path: string;
 
   @ManyToMany(() => Revision, (revision) => revision.files)
-  @JoinTable()
+  @JoinTable({ name: 'file_revisions' })
   revisions: Revision[];
 }
