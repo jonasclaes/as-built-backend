@@ -46,13 +46,6 @@ export class FilesController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createFileDto: CreateFileDto,
   ) {
-    if (!file || !createFileDto) {
-      throw new HttpException(
-        'File and file metadata are required',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     try {
       return await this.filesService.uploadFile(
         file.originalname,

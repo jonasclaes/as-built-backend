@@ -4,30 +4,16 @@ import { UpdateFileDto } from './dto/update-file.dto';
 import { InjectTenantRepository } from '../tenancy/tenancy.decorators';
 import { Repository } from 'typeorm';
 import { File } from './entities/file.entity';
-import { ConfigService } from '@nestjs/config';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Revision } from '../revisions/entities/revision.entity';
+import { StorageService } from 'src/storage/storage.service';
 
 @Injectable()
 export class FilesService {
-  private readonly s3Client: S3Client;
-
   constructor(
     @InjectTenantRepository(File)
     private readonly filesRepository: Repository<File>,
-    private readonly configService: ConfigService,
-  ) {
-    this.s3Client = new S3Client({
-      credentials: {
-        accessKeyId: this.configService.getOrThrow<string>('MINIO_ACCESS_KEY'),
-        secretAccessKey:
-          this.configService.getOrThrow<string>('MINIO_SECRET_KEY'),
-      },
-      endpoint: this.configService.getOrThrow<string>('MINIO_ENDPOINT'),
-      region: this.configService.get<string>('MINIO_REGION', 'us-east-1'),
-      forcePathStyle: true,
-    });
-  }
+    private readonly storageService: StorageService,
+  ) {}
 
   async uploadFile(
     fileName: string,
@@ -35,46 +21,30 @@ export class FilesService {
     fileDto: CreateFileDto,
     mimeType: string,
   ) {
-    const bucketName = this.configService.getOrThrow<string>('MINIO_BUCKET');
+    const fileUri = await this.storageService.uploadFile(
+      fileName,
+      fileBuffer,
+      mimeType,
+    );
 
-    const uploadParams = {
-      Bucket: bucketName,
-      Body: fileBuffer,
-      Key: fileName,
-      ContentType: mimeType,
-    };
+    const newFile = this.filesRepository.create({
+      name: fileName,
+      path: fileUri,
+    });
 
-    try {
-      await this.s3Client.send(new PutObjectCommand(uploadParams));
+    const savedFile = await this.filesRepository.save(newFile);
 
-      const fileUri = this.getS3FileUri(bucketName, fileName);
-      const newFile = this.filesRepository.create({
-        name: fileName,
-        path: fileUri,
-      });
+    const revision = await this.filesRepository.manager.findOneBy(Revision, {
+      id: fileDto.revisionId.id,
+    });
 
-      const savedFile = await this.filesRepository.save(newFile);
-
-      const revision = await this.filesRepository.manager.findOneBy(Revision, {
-        id: fileDto.revisionId,
-      });
-      if (!revision) {
-        throw new Error(`Revision with ID ${fileDto.revisionId} not found`);
-      }
-
-      savedFile.revisions = [revision];
-      await this.filesRepository.save(savedFile);
-
-      return savedFile;
-    } catch (error) {
-      throw new Error(`Failed to upload file: ${error.message}`);
+    if (!revision) {
+      throw new Error(`Revision with ID ${fileDto.revisionId} not found`);
     }
-  }
 
-  private getS3FileUri(bucketName: string, fileName: string) {
-    const endpoint = this.configService.getOrThrow<string>('MINIO_ENDPOINT');
-
-    return `${endpoint}/${bucketName}/${fileName}`;
+    savedFile.revisions = [revision];
+    await this.filesRepository.save(savedFile);
+    return savedFile;
   }
 
   findAll() {

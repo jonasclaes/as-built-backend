@@ -11,6 +11,7 @@ import { ormConfig } from './typeorm/orm.config';
 import { MultiTenancyModule } from './multi-tenancy/multi-tenancy.module';
 import { RevisionsModule } from './revisions/revisions.module';
 import { FilesModule } from './files/files.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { FilesModule } from './files/files.module';
     MultiTenancyModule,
     RevisionsModule,
     FilesModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
