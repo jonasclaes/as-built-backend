@@ -15,31 +15,27 @@ export class FilesService {
     private readonly storageService: StorageService,
   ) {}
 
-  async uploadFile(
-    fileName: string,
-    fileBuffer: Buffer,
-    fileDto: CreateFileDto,
-    mimeType: string,
-  ) {
-    const fileUri = await this.storageService.uploadFile(
-      fileName,
-      fileBuffer,
-      mimeType,
+  async create(createFileDto: CreateFileDto) {
+    const { name, file, mineType, revision: revisionDto } = createFileDto;
+    const fileUrl = await this.storageService.create(
+      name,
+      file.buffer,
+      mineType,
     );
 
     const newFile = this.filesRepository.create({
-      name: fileName,
-      path: fileUri,
+      name,
+      path: fileUrl,
     });
 
     const savedFile = await this.filesRepository.save(newFile);
 
     const revision = await this.filesRepository.manager.findOneBy(Revision, {
-      id: fileDto.revisionId.id,
+      id: revisionDto.id,
     });
 
     if (!revision) {
-      throw new Error(`Revision with ID ${fileDto.revisionId} not found`);
+      throw new Error(`Revision with ID ${revisionDto.id} not found`);
     }
 
     savedFile.revisions = [revision];

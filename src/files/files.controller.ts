@@ -36,23 +36,24 @@ export class FilesController {
           type: 'string',
           format: 'binary',
         },
-        revisionId: {
-          type: 'number',
+        revision: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'number',
+            },
+          },
         },
       },
     },
   })
-  async uploadFile(
+  async create(
     @UploadedFile() file: Express.Multer.File,
     @Body() createFileDto: CreateFileDto,
   ) {
+    createFileDto.file = file;
     try {
-      return await this.filesService.uploadFile(
-        file.originalname,
-        file.buffer,
-        createFileDto,
-        file.mimetype,
-      );
+      return await this.filesService.create(createFileDto);
     } catch (error) {
       throw new HttpException(
         `Failed to upload file: ${error.message}`,
