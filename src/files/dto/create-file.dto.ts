@@ -1,18 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Revision } from 'src/revisions/entities/revision.entity';
-import { IsNotEmpty } from 'class-validator';
+import { Revision } from '../../revisions/entities/revision.entity';
 
 export class CreateFileDto {
-  @ApiProperty({ type: 'string', format: 'binary' })
-  file: any;
+  @ApiProperty({ type: 'string', format: 'binary', required: true })
+  file: Express.Multer.File;
 
   @ApiProperty()
-  name: string;
+  fileName: string;
 
-  @ApiProperty()
-  mineType: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  revision: Revision;
+  @ApiProperty({ type: 'number', required: true })
+  revisionId: Revision['id'];
 }

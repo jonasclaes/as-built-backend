@@ -14,7 +14,7 @@ import {
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
-import { ApiBody, ApiConsumes, ApiHeader } from '@nestjs/swagger';
+import { ApiConsumes, ApiHeader } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiHeader({
@@ -26,30 +26,11 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        file: {
-          type: 'string',
-          format: 'binary',
-        },
-        revision: {
-          type: 'object',
-          properties: {
-            id: {
-              type: 'number',
-            },
-          },
-        },
-      },
-    },
-  })
+  @UseInterceptors(FileInterceptor('file'))
   async create(
-    @UploadedFile() file: Express.Multer.File,
     @Body() createFileDto: CreateFileDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     createFileDto.file = file;
     try {

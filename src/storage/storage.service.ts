@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { MinioService } from './minio.service';
+import { MinIOService } from './minio.service';
 import { S3Service } from './s3.service';
 import { StorageProvider } from './storage-provider.interface';
 
@@ -9,7 +9,7 @@ export class StorageService {
   private storageProvider: StorageProvider;
   constructor(
     private readonly configService: ConfigService,
-    private readonly minioService: MinioService,
+    private readonly minioService: MinIOService,
     private readonly s3Service: S3Service,
   ) {
     const url = new URL(
@@ -28,9 +28,9 @@ export class StorageService {
   async create(
     fileName: string,
     fileBuffer: Buffer,
-    mineType: string,
+    mimeType: string,
   ): Promise<string> {
-    return await this.storageProvider.create(fileName, fileBuffer, mineType);
+    return await this.storageProvider.create(fileName, fileBuffer, mimeType);
   }
 
   async getFileUrl(fileName: string): Promise<string> {

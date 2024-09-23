@@ -4,7 +4,6 @@ import { UpdateFileDto } from './dto/update-file.dto';
 import { InjectTenantRepository } from '../tenancy/tenancy.decorators';
 import { Repository } from 'typeorm';
 import { File } from './entities/file.entity';
-import { Revision } from '../revisions/entities/revision.entity';
 import { StorageService } from 'src/storage/storage.service';
 
 @Injectable()
@@ -16,30 +15,26 @@ export class FilesService {
   ) {}
 
   async create(createFileDto: CreateFileDto) {
-    const { name, file, mineType, revision: revisionDto } = createFileDto;
+    const { file, fileName, revisionId } = createFileDto;
+
     const fileUrl = await this.storageService.create(
-      name,
+      fileName,
       file.buffer,
-      mineType,
+      file.mimetype,
     );
 
     const newFile = this.filesRepository.create({
-      name,
+      name: fileName,
       path: fileUrl,
+      revisions: [
+        {
+          id: revisionId,
+        },
+      ],
     });
 
     const savedFile = await this.filesRepository.save(newFile);
 
-    const revision = await this.filesRepository.manager.findOneBy(Revision, {
-      id: revisionDto.id,
-    });
-
-    if (!revision) {
-      throw new Error(`Revision with ID ${revisionDto.id} not found`);
-    }
-
-    savedFile.revisions = [revision];
-    await this.filesRepository.save(savedFile);
     return savedFile;
   }
 
@@ -52,7 +47,13 @@ export class FilesService {
   }
 
   update(id: number, updateFileDto: UpdateFileDto) {
-    return this.filesRepository.update(id, updateFileDto);
+    const { file } = updateFileDto;
+
+    if (!file) throw new Error('File is a required attribute.');
+
+    return this.filesRepository.update(id, {
+      name: file.filename,
+    });
   }
 
   remove(id: number) {
