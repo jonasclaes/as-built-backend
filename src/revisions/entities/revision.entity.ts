@@ -1,9 +1,11 @@
 import { Project } from '../../projects/entities/project.entity';
+import { Comment } from '../../comments/entities/comment.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -28,4 +30,7 @@ export class Revision {
 
   @ManyToOne(() => Project, (project) => project.revisions)
   project: Project;
+
+  @ManyToMany(() => Comment, (comment) => comment.revisions)
+  comments: Comment[];
 }

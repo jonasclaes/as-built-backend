@@ -10,6 +10,7 @@ import { TenantsModule } from './tenants/tenants.module';
 import { ormConfig } from './typeorm/orm.config';
 import { MultiTenancyModule } from './multi-tenancy/multi-tenancy.module';
 import { RevisionsModule } from './revisions/revisions.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { RevisionsModule } from './revisions/revisions.module';
     TenantsModule,
     MultiTenancyModule,
     RevisionsModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
