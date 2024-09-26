@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { StorageProvider } from './storage-provider.interface';
+import { Readable } from 'stream';
 
 @Injectable()
 export class MinIOService implements StorageProvider {
@@ -53,6 +58,15 @@ export class MinIOService implements StorageProvider {
   }
 
   async getFileUrl(fileName: string): Promise<string> {
-    return `${this.proto}://${this.url.host}/${this.bucketName}/${fileName}`;
+    return `minio://${this.url.host}/${this.bucketName}/${fileName}`;
+  }
+
+  async download(fileName: string): Promise<Readable> {
+    const getObjectCommand = new GetObjectCommand({
+      Bucket: this.bucketName,
+      Key: fileName,
+    });
+    const { Body } = await this.s3Client.send(getObjectCommand);
+    return Body as Readable;
   }
 }

@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { MinIOService } from './minio.service';
 import { S3Service } from './s3.service';
 import { StorageProvider } from './storage-provider.interface';
+import { Readable } from 'stream';
 
 @Injectable()
 export class StorageService {
@@ -35,5 +36,8 @@ export class StorageService {
 
   async getFileUrl(fileName: string): Promise<string> {
     return await this.storageProvider.getFileUrl(fileName);
+  }
+  async download(fileName: string): Promise<Readable> {
+    return await this.storageProvider.download(fileName);
   }
 }

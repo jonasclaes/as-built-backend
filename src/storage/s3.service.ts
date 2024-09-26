@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { StorageProvider } from './storage-provider.interface';
+import { Readable } from 'stream';
 
 @Injectable()
 export class S3Service implements StorageProvider {
@@ -41,5 +46,13 @@ export class S3Service implements StorageProvider {
 
   async getFileUrl(fileName: string): Promise<string> {
     return `${this.url.href}/${fileName}`;
+  }
+  async download(fileName: string): Promise<Readable> {
+    const getObjectCommand = new GetObjectCommand({
+      Bucket: this.bucketName,
+      Key: fileName,
+    });
+    const { Body } = await this.s3Client.send(getObjectCommand);
+    return Body as Readable;
   }
 }

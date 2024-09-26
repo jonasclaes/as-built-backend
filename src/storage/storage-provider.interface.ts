@@ -1,3 +1,5 @@
+import { Readable } from 'stream';
+
 export interface StorageProvider {
   create(
     fileName: string,
@@ -5,4 +7,5 @@ export interface StorageProvider {
     mimeType: string,
   ): Promise<string>;
   getFileUrl(fileName: string): Promise<string>;
+  download(fileName: string): Promise<Readable>;
 }

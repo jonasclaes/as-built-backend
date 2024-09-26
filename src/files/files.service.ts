@@ -5,6 +5,7 @@ import { InjectTenantRepository } from '../tenancy/tenancy.decorators';
 import { Repository } from 'typeorm';
 import { File } from './entities/file.entity';
 import { StorageService } from 'src/storage/storage.service';
+import { Readable } from 'stream';
 
 @Injectable()
 export class FilesService {
@@ -58,5 +59,24 @@ export class FilesService {
 
   remove(id: number) {
     return this.filesRepository.delete(id);
+  }
+
+  async download(id: number): Promise<Readable> {
+    const file = await this.findOne(id);
+    if (!file) {
+      throw new Error(`File with ID ${id} not found`);
+    }
+
+    const { key } = this.parseFilePath(file.path);
+    return this.storageService.download(key);
+  }
+
+  parseFilePath(filePath: string) {
+    const url = new URL(filePath);
+    const provider = url.protocol.replace(':', '');
+    const bucket = url.pathname.split('/')[1];
+    const key = url.pathname.split('/').slice(2).join('/');
+
+    return { provider, bucket, key };
   }
 }

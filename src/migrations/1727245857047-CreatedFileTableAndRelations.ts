@@ -1,9 +1,14 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class RenamedManyToManyTable1727079925680 implements MigrationInterface {
-  name = 'RenamedManyToManyTable1727079925680';
+export class CreatedFileTableAndRelations1727245857047
+  implements MigrationInterface
+{
+  name = 'CreatedFileTableAndRelations1727245857047';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `CREATE TABLE "file" ("id" SERIAL NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "deletedAt" TIMESTAMP, "name" character varying NOT NULL, "path" character varying NOT NULL, CONSTRAINT "PK_36b46d232307066b3a2c9ea3a1d" PRIMARY KEY ("id"))`,
+    );
     await queryRunner.query(
       `CREATE TABLE "files_revisions" ("fileId" integer NOT NULL, "revisionId" integer NOT NULL, CONSTRAINT "PK_d9d56fb1c90de319b3e4f368cdf" PRIMARY KEY ("fileId", "revisionId"))`,
     );
@@ -35,5 +40,6 @@ export class RenamedManyToManyTable1727079925680 implements MigrationInterface {
       `DROP INDEX "public"."IDX_d5fffd080ffde1afa91cf772d0"`,
     );
     await queryRunner.query(`DROP TABLE "files_revisions"`);
+    await queryRunner.query(`DROP TABLE "file"`);
   }
 }

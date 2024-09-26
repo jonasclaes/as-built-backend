@@ -10,12 +10,15 @@ import {
   UploadedFile,
   HttpException,
   HttpStatus,
+  Res, // Add this import
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { CreateFileDto } from './dto/create-file.dto';
 import { UpdateFileDto } from './dto/update-file.dto';
 import { ApiConsumes, ApiHeader } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express'; // Import Response from express
+import { Readable } from 'stream'; // Ensure to import Readable from 'stream'
 
 @ApiHeader({
   name: 'x-tenant-id',
@@ -38,6 +41,31 @@ export class FilesController {
     } catch (error) {
       throw new HttpException(
         `Failed to upload file: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get(':id/download')
+  async download(@Param('id') id: string, @Res() res: Response) {
+    try {
+      const file = await this.filesService.findOne(+id);
+      if (!file) {
+        throw new HttpException('File not found', HttpStatus.NOT_FOUND);
+      }
+
+      const fileStream: Readable = await this.filesService.download(+id);
+
+      res.set({
+        'Content-Type': 'application/octet-stream',
+        'Content-Disposition': `attachment; filename="${file.name}"`,
+      });
+
+      fileStream.pipe(res);
+    } catch (error) {
+      console.error(error);
+      throw new HttpException(
+        `Failed to download file: ${error.message || 'Unknown error'}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
