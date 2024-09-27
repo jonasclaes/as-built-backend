@@ -60,4 +60,15 @@ export class RevisionsController {
   ) {
     return this.revisionsService.duplicateRevision(+id, createRevisionDto);
   }
+
+  @Delete(':revisionId/comments/:commentId')
+  removeComment(
+    @Param('revisionId') revisionId: string,
+    @Param('commentId') commentId: string,
+  ) {
+    return this.revisionsService.removeCommentFromRevision(
+      +revisionId,
+      +commentId,
+    );
+  }
 }

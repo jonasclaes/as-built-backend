@@ -44,7 +44,7 @@ export class RevisionsService {
       relations: ['comments', 'files'],
     });
     if (!originalRevision) {
-      throw new NotFoundException('Revision with id ${id} is not found');
+      throw new NotFoundException(`Revision with id ${id} is not found`);
     }
     const newRevision = this.revisionRepository.create({
       name: createRevisionDto.name,
@@ -53,5 +53,21 @@ export class RevisionsService {
       files: [...originalRevision.files],
     });
     return await this.revisionRepository.save(newRevision);
+  }
+
+  async removeCommentFromRevision(revisionId: number, commentId: number) {
+    const revision = await this.revisionRepository.findOne({
+      where: { id: revisionId },
+      relations: ['comments'],
+    });
+    if (!revision) {
+      throw new NotFoundException(
+        `Revision with ID ${revisionId} is not found`,
+      );
+    }
+    revision.comments = revision.comments.filter(
+      (comment) => comment.id !== commentId,
+    );
+    await this.revisionRepository.save(revision);
   }
 }
