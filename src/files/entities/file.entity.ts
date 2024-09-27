@@ -1,18 +1,17 @@
-import { Project } from '../../projects/entities/project.entity';
-import { File } from '../../files/entities/file.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Revision } from '../../revisions/entities/revision.entity';
 
 @Entity()
-export class Revision {
+export class File {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,9 +27,10 @@ export class Revision {
   @Column()
   name: string;
 
-  @ManyToOne(() => Project, (project) => project.revisions)
-  project: Project;
+  @Column()
+  path: string;
 
-  @ManyToMany(() => File, (file) => file.revisions)
-  files: File[];
+  @ManyToMany(() => Revision, (revision) => revision.files)
+  @JoinTable({ name: 'files_revisions' })
+  revisions: Revision[];
 }
