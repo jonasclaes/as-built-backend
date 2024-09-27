@@ -1,4 +1,4 @@
-import { Injectable, Scope } from '@nestjs/common';
+import { Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { InjectTenantRepository } from '../tenancy/tenancy.decorators';
 import { Revision } from './entities/revision.entity';
 import { Repository } from 'typeorm';
@@ -10,6 +10,12 @@ export class RevisionsService {
   constructor(
     @InjectTenantRepository(Revision)
     private readonly revisionRepository: Repository<Revision>,
+
+    @InjectTenantRepository(Comment)
+    private readonly commentRepository: Repository<Comment>,
+
+    @InjectTenantRepository(File)
+    private readonly fileRepository: Repository<File>,
   ) {}
 
   create(createRevisionDto: CreateRevisionDto) {
@@ -36,5 +42,22 @@ export class RevisionsService {
 
   remove(id: number) {
     return this.revisionRepository.delete(id);
+  }
+
+  async duplicateRevision(id: number, createRevisionDto: CreateRevisionDto) {
+    const originalRevision = await this.revisionRepository.findOne({
+      where: { id },
+      relations: ['comments', 'files'],
+    });
+    if (!originalRevision) {
+      throw new NotFoundException('Revision with id ${id} is not found');
+    }
+    const newRevision = this.revisionRepository.create({
+      name: createRevisionDto.name,
+      project: originalRevision.project,
+      comments: [...originalRevision.comments],
+      files: [...originalRevision.files],
+    });
+    return await this.revisionRepository.save(newRevision);
   }
 }
