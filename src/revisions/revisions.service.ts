@@ -70,4 +70,18 @@ export class RevisionsService {
     );
     await this.revisionRepository.save(revision);
   }
+
+  async removeFileFromRevision(revisionId: number, fileId: number) {
+    const revision = await this.revisionRepository.findOne({
+      where: { id: revisionId },
+      relations: ['files'],
+    });
+    if (!revision) {
+      throw new NotFoundException(
+        `Revision with ID ${revisionId} is not found`,
+      );
+    }
+    revision.files = revision.files.filter((file) => file.id !== fileId);
+    await this.revisionRepository.save(revision);
+  }
 }

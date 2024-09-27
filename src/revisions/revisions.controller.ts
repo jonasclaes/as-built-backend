@@ -71,4 +71,11 @@ export class RevisionsController {
       +commentId,
     );
   }
+  @Delete(':revisionId/files/:fileId')
+  removeFile(
+    @Param('revisionId') revisionId: string,
+    @Param('fileId') fileId: string,
+  ) {
+    return this.revisionsService.removeFileFromRevision(+revisionId, +fileId);
+  }
 }
