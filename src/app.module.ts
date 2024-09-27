@@ -11,10 +11,12 @@ import { ormConfig } from './typeorm/orm.config';
 import { MultiTenancyModule } from './multi-tenancy/multi-tenancy.module';
 import { RevisionsModule } from './revisions/revisions.module';
 import { CommentsModule } from './comments/comments.module';
+import { FilesModule } from './files/files.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -31,6 +33,8 @@ import { CommentsModule } from './comments/comments.module';
     MultiTenancyModule,
     RevisionsModule,
     CommentsModule,
+    FilesModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

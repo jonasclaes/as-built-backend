@@ -1,5 +1,7 @@
 import { Project } from '../../projects/entities/project.entity';
 import { Comment } from '../../comments/entities/comment.entity';
+import { File } from '../../files/entities/file.entity';
+
 import {
   Column,
   CreateDateColumn,
@@ -33,4 +35,7 @@ export class Revision {
 
   @ManyToMany(() => Comment, (comment) => comment.revisions)
   comments: Comment[];
+  
+  @ManyToMany(() => File, (file) => file.revisions)
+  files: File[];
 }
