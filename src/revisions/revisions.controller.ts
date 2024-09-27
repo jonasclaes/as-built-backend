@@ -52,4 +52,12 @@ export class RevisionsController {
   remove(@Param('id') id: string) {
     return this.revisionsService.remove(+id);
   }
+
+  @Post(':id/duplicate')
+  duplicateRevision(
+    @Param('id') id: string,
+    @Body() createRevisionDto: CreateRevisionDto,
+  ) {
+    return this.revisionsService.duplicateRevision(+id, createRevisionDto);
+  }
 }

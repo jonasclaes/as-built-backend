@@ -10,12 +10,6 @@ export class RevisionsService {
   constructor(
     @InjectTenantRepository(Revision)
     private readonly revisionRepository: Repository<Revision>,
-
-    @InjectTenantRepository(Comment)
-    private readonly commentRepository: Repository<Comment>,
-
-    @InjectTenantRepository(File)
-    private readonly fileRepository: Repository<File>,
   ) {}
 
   create(createRevisionDto: CreateRevisionDto) {
@@ -54,7 +48,7 @@ export class RevisionsService {
     }
     const newRevision = this.revisionRepository.create({
       name: createRevisionDto.name,
-      project: originalRevision.project,
+      project: createRevisionDto.project,
       comments: [...originalRevision.comments],
       files: [...originalRevision.files],
     });
