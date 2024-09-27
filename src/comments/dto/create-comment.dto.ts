@@ -8,6 +8,6 @@ export class CreateCommentDto {
   @ApiProperty()
   description: string;
 
-  @ApiProperty({ type: 'number', required: true })
+  @ApiProperty()
   revision: Revision['id'];
 }
