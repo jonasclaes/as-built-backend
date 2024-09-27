@@ -10,6 +10,7 @@ import { TenantsModule } from './tenants/tenants.module';
 import { ormConfig } from './typeorm/orm.config';
 import { MultiTenancyModule } from './multi-tenancy/multi-tenancy.module';
 import { RevisionsModule } from './revisions/revisions.module';
+import { CommentsModule } from './comments/comments.module';
 import { FilesModule } from './files/files.module';
 import { StorageModule } from './storage/storage.module';
 
@@ -31,6 +32,7 @@ import { StorageModule } from './storage/storage.module';
     TenantsModule,
     MultiTenancyModule,
     RevisionsModule,
+    CommentsModule,
     FilesModule,
     StorageModule,
   ],
