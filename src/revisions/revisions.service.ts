@@ -47,8 +47,7 @@ export class RevisionsService {
       throw new NotFoundException(`Revision with id ${id} is not found`);
     }
     const newRevision = this.revisionRepository.create({
-      name: createRevisionDto.name,
-      project: createRevisionDto.project,
+      ...createRevisionDto,
       comments: [...originalRevision.comments],
       files: [...originalRevision.files],
     });
