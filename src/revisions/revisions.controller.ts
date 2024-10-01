@@ -52,4 +52,30 @@ export class RevisionsController {
   remove(@Param('id') id: string) {
     return this.revisionsService.remove(+id);
   }
+
+  @Post(':id/duplicate')
+  duplicateRevision(
+    @Param('id') id: string,
+    @Body() createRevisionDto: CreateRevisionDto,
+  ) {
+    return this.revisionsService.duplicateRevision(+id, createRevisionDto);
+  }
+
+  @Delete(':revisionId/comments/:commentId')
+  removeComment(
+    @Param('revisionId') revisionId: string,
+    @Param('commentId') commentId: string,
+  ) {
+    return this.revisionsService.removeCommentFromRevision(
+      +revisionId,
+      +commentId,
+    );
+  }
+  @Delete(':revisionId/files/:fileId')
+  removeFile(
+    @Param('revisionId') revisionId: string,
+    @Param('fileId') fileId: string,
+  ) {
+    return this.revisionsService.removeFileFromRevision(+revisionId, +fileId);
+  }
 }

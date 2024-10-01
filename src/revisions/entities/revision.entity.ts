@@ -35,7 +35,7 @@ export class Revision {
 
   @ManyToMany(() => Comment, (comment) => comment.revisions)
   comments: Comment[];
-  
+
   @ManyToMany(() => File, (file) => file.revisions)
   files: File[];
 }
