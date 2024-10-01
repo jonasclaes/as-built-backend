@@ -43,13 +43,14 @@ export class RevisionsService {
       where: { id },
       relations: ['comments', 'files'],
     });
+
     if (!originalRevision) {
       throw new NotFoundException(`Revision with id ${id} is not found`);
     }
     const newRevision = this.revisionRepository.create({
+      ...originalRevision,
       ...createRevisionDto,
-      comments: [...originalRevision.comments],
-      files: [...originalRevision.files],
+      id: undefined,
     });
     return await this.revisionRepository.save(newRevision);
   }
