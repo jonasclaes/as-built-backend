@@ -1,6 +1,4 @@
-# Stage 1: building the application
-
-# Build the application
+# Stage 1: Build the application
 FROM node:20-slim as build
 
 # Set working directory
@@ -22,19 +20,19 @@ RUN npm run build
 FROM node:20-slim as production
 
 # Set working directory
-WORKDIR /src/app
+WORKDIR /app
 
-# Copy only the build output and package files from build stage
-COPY --from=build /src/app/dist ./dist
-COPY --from=build /src/app/package*.json ./
+# Copy only the built output and package files from the build stage
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package*.json ./
 
-#Install production dependencies
-RUN npm install --only=production
+# Install only production dependencies
+RUN npm install --omit=dev
 
 # Set the environment variables
 ENV NODE_ENV=production
 
-#Set the environment variables
+# Expose port 3000
 EXPOSE 3000
 
 # Command to run the app
