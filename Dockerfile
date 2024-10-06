@@ -1,40 +1,41 @@
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20
-FROM node:${NODE_VERSION}-slim as base
+# Stage 1: building the application
 
-LABEL fly_launch_runtime="NestJS"
+# Build the application
+FROM node:20-slim as build
 
-# NestJS app lives here
+# Set working directory
 WORKDIR /app
 
-# Set production environment
-ENV NODE_ENV="production"
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
+# Install dependencies
+RUN npm install
 
-# Throw-away build stage to reduce size of final image
-FROM base as build
-
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
-
-# Install node modules
-COPY --link package-lock.json package.json ./
-RUN npm ci --include=dev
-
-# Copy application code
-COPY --link . .
+# Copy rest of the application code
+COPY . .
 
 # Build application
 RUN npm run build
 
+# Stage 2: Run the application
+FROM node:20-slim as production
 
-# Final stage for app image
-FROM base
+# Set working directory
+WORKDIR /src/app
 
-# Copy built application
-COPY --from=build /app /app
+# Copy only the build output and package files from build stage
+COPY --from=build /src/app/dist ./dist
+COPY --from=build /src/app/package*.json ./
 
-# Start the server by default, this can be overwritten at runtime
+#Install production dependencies
+RUN npm install --only=production
+
+# Set the environment variables
+ENV NODE_ENV=production
+
+#Set the environment variables
 EXPOSE 3000
+
+# Command to run the app
 CMD [ "npm", "run", "start:prod" ]
