@@ -1,0 +1,25 @@
+services:
+  app:
+    build: .
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: postgres-db
+    env_file:
+      - .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+volumes:
+  pgdata:
+    driver: local
