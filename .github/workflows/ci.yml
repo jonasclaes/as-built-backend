@@ -50,9 +50,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: unit-tests
 
+    env:
+      STORAGE_ENDPOINT_URL: minio://JvsjzIkyNbbPdTJ9UkFh:j049QfAoU6Pwxbz0kuMoZK5jdy8r4R9ZIAAtBFqd@minio.jonasclaes.be/as-built-dev?region=eu-west-1
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
