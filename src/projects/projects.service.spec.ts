@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProjectsService } from './projects.service';
-import { Project } from './entities/project.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { TENANT_DATA_SOURCE_NAME } from '../tenancy/tenancy.module';
+import { Project } from './entities/project.entity'; // Assuming you have a Project entity
+import { TENANT_DATA_SOURCE_NAME } from '../tenancy/tenancy.module'; // Assuming tenant setup
 
 describe('ProjectsService', () => {
   let service: ProjectsService;
@@ -13,6 +13,10 @@ describe('ProjectsService', () => {
         ProjectsService,
         {
           provide: getRepositoryToken(Project, TENANT_DATA_SOURCE_NAME),
+          useValue: {},
+        },
+        {
+          provide: 'tenant_ClientRepository',
           useValue: {},
         },
       ],

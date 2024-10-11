@@ -4,7 +4,7 @@ import { UpdateFileDto } from './dto/update-file.dto';
 import { InjectTenantRepository } from '../tenancy/tenancy.decorators';
 import { Repository } from 'typeorm';
 import { File } from './entities/file.entity';
-import { StorageService } from 'src/storage/storage.service';
+import { StorageService } from '../storage/storage.service';
 import { Readable } from 'stream';
 
 @Injectable()
