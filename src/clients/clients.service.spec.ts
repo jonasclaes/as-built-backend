@@ -43,6 +43,7 @@ describe('ClientsService', () => {
         deletedAt: new Date(),
         id: 1,
         name: 'Test',
+        projects: [],
       },
       {
         createdAt: new Date(),
@@ -50,6 +51,7 @@ describe('ClientsService', () => {
         deletedAt: new Date(),
         id: 2,
         name: 'Test',
+        projects: [],
       },
     ];
 
@@ -65,6 +67,7 @@ describe('ClientsService', () => {
       deletedAt: new Date(),
       id: 1,
       name: 'Test',
+      projects: [],
     };
 
     repositoryMock.findOneBy.mockResolvedValue(client);

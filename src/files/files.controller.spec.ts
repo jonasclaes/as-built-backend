@@ -2,7 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FilesController } from './files.controller';
 import { FilesService } from './files.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { TENANT_DATA_SOURCE_NAME } from 'src/tenancy/tenancy.module';
+import { File } from './entities/file.entity';
+import { TENANT_DATA_SOURCE_NAME } from '../tenancy/tenancy.module';
+import { StorageService } from '../storage/storage.service'; // Importeer StorageService
 
 describe('FilesController', () => {
   let controller: FilesController;
@@ -15,6 +17,13 @@ describe('FilesController', () => {
         {
           provide: getRepositoryToken(File, TENANT_DATA_SOURCE_NAME),
           useValue: {},
+        },
+        {
+          provide: StorageService,
+          useValue: {
+            create: jest.fn(),
+            download: jest.fn(),
+          },
         },
       ],
     }).compile();

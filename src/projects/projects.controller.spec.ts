@@ -17,6 +17,10 @@ describe('ProjectsController', () => {
           provide: getRepositoryToken(Project, TENANT_DATA_SOURCE_NAME),
           useValue: {},
         },
+        {
+          provide: 'tenant_ClientRepository',
+          useValue: {},
+        },
       ],
     }).compile();
 

@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FilesService } from './files.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { TENANT_DATA_SOURCE_NAME } from '../tenancy/tenancy.module';
+import { File } from './entities/file.entity';
+import { StorageService } from '../storage/storage.service';
 
 describe('FilesService', () => {
   let service: FilesService;
@@ -12,6 +14,10 @@ describe('FilesService', () => {
         FilesService,
         {
           provide: getRepositoryToken(File, TENANT_DATA_SOURCE_NAME),
+          useValue: {},
+        },
+        {
+          provide: StorageService,
           useValue: {},
         },
       ],
