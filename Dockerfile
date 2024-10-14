@@ -1,42 +1,39 @@
-# syntax = docker/dockerfile:1
+# Stage 1: Build the application
+FROM node:20-slim as build
 
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.11.1
-FROM node:${NODE_VERSION}-slim as base
-
-LABEL fly_launch_runtime="NestJS"
-
-# NestJS app lives here
+# Set working directory
 WORKDIR /app
 
-# Set production environment
-ENV NODE_ENV="production"
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
+# Install dependencies
+RUN npm install
 
-# Throw-away build stage to reduce size of final image
-FROM base as build
-
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3
-
-# Install node modules
-COPY --link package-lock.json package.json ./
-RUN npm ci --include=dev
-
-# Copy application code
-COPY --link . .
+# Copy rest of the application code
+COPY . .
 
 # Build application
 RUN npm run build
 
+# Stage 2: Run the application
+FROM node:20-slim as production
 
-# Final stage for app image
-FROM base
+# Set working directory
+WORKDIR /app
 
-# Copy built application
-COPY --from=build /app /app
+# Copy only the built output and package files from the build stage
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package*.json ./
 
-# Start the server by default, this can be overwritten at runtime
+# Install only production dependencies
+RUN npm install --omit=dev
+
+# Set the environment variables
+ENV NODE_ENV=production
+
+# Expose port 3000
 EXPOSE 3000
+
+# Command to run the app
 CMD [ "npm", "run", "start:prod" ]
