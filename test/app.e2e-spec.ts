@@ -10,7 +10,7 @@ const globals = global as typeof globalThis & TestEnvironmentGlobals;
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     process.env.DATABASE_URL = globals.postgresContainer.getConnectionUri();
   });
 
