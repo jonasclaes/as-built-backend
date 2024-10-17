@@ -10,15 +10,23 @@ const globals = global as typeof globalThis & TestEnvironmentGlobals;
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     process.env.DATABASE_URL = globals.postgresContainer.getConnectionUri();
+    process.env.STORAGE_ENDPOINT_URL =
+      globals.minioContainer.getConnectionUri();
+  });
 
+  beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+  });
+
+  afterEach(async () => {
+    await app.close();
   });
 
   it('/ (GET)', () => {
