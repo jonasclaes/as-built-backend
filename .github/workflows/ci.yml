@@ -86,4 +86,3 @@ jobs:
 
       - name: Call CD workflow
         uses: ./.github/workflows/cd.yml
-        secrets: inherit
