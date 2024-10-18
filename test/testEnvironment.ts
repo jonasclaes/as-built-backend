@@ -14,7 +14,6 @@ class CustomEnvironment extends NodeEnvironment {
 
     this.postgresContainer = await new PostgreSqlContainer().start();
     this.global.postgresContainer = this.postgresContainer;
-
     this.minioContainer = await new MinIOContainer().start();
     this.global.minioContainer = this.minioContainer;
   }
