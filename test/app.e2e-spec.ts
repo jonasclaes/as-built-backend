@@ -16,10 +16,6 @@ describe('AppController (e2e)', () => {
       globals.minioContainer.getConnectionUri();
   });
 
-    process.env.STORAGE_ENDPOINT_URL =
-      globals.minioContainer.getConnectionUri();
-  });
-
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
