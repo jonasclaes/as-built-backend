@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2 # Specified version
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2 # Specified version
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
 
@@ -83,3 +83,8 @@ jobs:
         run: |
           docker build -t ghcr.io/${{ github.repository }}:latest .
           docker push ghcr.io/${{ github.repository }}:latest  # run key (consider clarifying or removing this comment)
+
+  calling-CD:
+    runs-on: ubuntu-latest
+    UseCallable:
+      uses: ./github/workflows/cd.yml
