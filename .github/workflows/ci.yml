@@ -83,9 +83,3 @@ jobs:
         run: |
           docker build -t ghcr.io/${{ github.repository }}:latest .
           docker push ghcr.io/${{ github.repository }}:latest  # run key (consider clarifying or removing this comment)
-
-    call-CD-pipeline:
-      uses: ./.github/workflows/cd.yml
-      with:
-        config-path: .github/labeler.yml
-      secrets: inherit
