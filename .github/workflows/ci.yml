@@ -82,10 +82,4 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -t ghcr.io/${{ github.repository }}:latest .
-          docker push ghcr.io/${{ github.repository }}:latest  # run key (consider clarifying or removing this comment)
-
-  calling-CD:
-    runs-on: ubuntu-latest
-    workflow-call:
-      workflow: cd.yml
-      path: .github/workflows/
+          docker push ghcr.io/${{ github.repository }}:latest
