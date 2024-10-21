@@ -85,7 +85,7 @@ jobs:
           docker push ghcr.io/${{ github.repository }}:latest  # run key (consider clarifying or removing this comment)
 
   calling-CD:
-  runs-on: ubuntu-latest
-  workflow-call:
-    workflow: cd.yml
-    path: .github/workflows/
+    runs-on: ubuntu-latest
+    workflow-call:
+      workflow: cd.yml
+      path: .github/workflows/
