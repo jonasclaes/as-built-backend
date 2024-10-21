@@ -5,14 +5,11 @@ import {
   StartedTestContainer,
   AbstractStartedContainer,
 } from 'testcontainers';
-
 const MINIO_PORT = 9000;
-
 export class MinIOContainer extends GenericContainer {
   username = 'minioadmin';
   password = 'minioadmin';
   bucketName = 'miniobucket';
-
   constructor(image: string = 'minio/minio') {
     super(image);
     this.withExposedPorts(MINIO_PORT)
@@ -26,22 +23,18 @@ export class MinIOContainer extends GenericContainer {
       .withStartupTimeout(120_000)
       .withCommand(['minio', 'server', '/data']);
   }
-
   withUsername(username: string): this {
     this.username = username;
     return this;
   }
-
   withPassword(password: string): this {
     this.password = password;
     return this;
   }
-
   withBucketName(bucketName: string): this {
     this.bucketName = bucketName;
     return this;
   }
-
   protected async containerStarted(
     container: StartedTestContainer,
   ): Promise<void> {
@@ -52,10 +45,8 @@ export class MinIOContainer extends GenericContainer {
       accessKey: this.username,
       secretKey: this.password,
     });
-
     await minioClient.makeBucket(this.bucketName);
   }
-
   async start(): Promise<StartedMinIOContainer> {
     this.withEnvironment({
       MINIO_ROOT_USER: this.username,
@@ -69,13 +60,11 @@ export class MinIOContainer extends GenericContainer {
     );
   }
 }
-
 export class StartedMinIOContainer extends AbstractStartedContainer {
   username: string;
   password: string;
   bucketName: string;
   port: number;
-
   constructor(
     startedTestContainer: StartedTestContainer,
     username: string,
@@ -88,19 +77,15 @@ export class StartedMinIOContainer extends AbstractStartedContainer {
     this.bucketName = bucketName;
     this.port = startedTestContainer.getMappedPort(MINIO_PORT);
   }
-
   getPort(): number {
     return this.port;
   }
-
   getRootUser(): string {
     return this.username;
   }
-
   getRootPassword(): string {
     return this.password;
   }
-
   getConnectionUri(): string {
     return `minio://${this.username}:${this.password}@localhost:${this.getPort()}/${this.bucketName}?region=eu-west-1`;
   }
