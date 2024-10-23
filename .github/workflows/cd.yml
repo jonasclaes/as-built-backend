@@ -13,6 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug environment variables
+        run: |
+          echo "SSH_HOSTNAME: ${{ env.SSH_HOSTNAME }}"
+          echo "SSH_USERNAME: ${{ env.SSH_USERNAME }}"
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.1.0
         with:
@@ -20,7 +25,6 @@ jobs:
           username: ${{ env.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-
           script: |
             docker pull ghcr.io/${{ github.repository }}:latest
             docker stop my-app || true
