@@ -15,15 +15,15 @@ jobs:
 
       - name: Debug environment variables
         run: |
-          echo "SSH_HOSTNAME: ${{ env.SSH_HOSTNAME }}" 
-          echo "SSH_USERNAME: ${{ env.SSH_USERNAME }}"
+          echo "SSH_HOSTNAME: ${{ vars.SSH_HOSTNAME }}" 
+          echo "SSH_USERNAME: ${{ vars.SSH_USERNAME }}"
 
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.1.0
         with:
-          host: ${{ env.SSH_HOSTNAME }}
-          username: ${{ env.SSH_USERNAME }}
+          host: ${{ vars.SSH_HOSTNAME }}
+          username: ${{ vars.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
 
