@@ -19,13 +19,15 @@ jobs:
           echo "SSH_USERNAME: ${{ env.SSH_USERNAME }}"
 
       - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.1.0
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ env.SSH_HOSTNAME }}
           username: ${{ env.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
+            cd ~/as-built-backend
             docker pull ghcr.io/${{ github.repository }}:latest
             docker stop my-app || true
             docker rm my-app || true
