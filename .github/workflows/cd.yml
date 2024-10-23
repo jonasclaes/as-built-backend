@@ -13,7 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-        
+      - name: Debug environment variables
+        run: |
+          echo "SSH_HOSTNAME: ${{ env.SSH_HOSTNAME }}" 
+          echo "SSH_USERNAME: ${{ env.SSH_USERNAME }}"
+
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.1.0
