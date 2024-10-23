@@ -18,11 +18,14 @@ jobs:
           echo "SSH_HOSTNAME: ${{ vars.SSH_HOSTNAME }}" 
           echo "SSH_USERNAME: ${{ vars.SSH_USERNAME }}"
 
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
         with:
+
           host: ${{ vars.SSH_HOSTNAME }}
           username: ${{ vars.SSH_USERNAME }}
+
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
