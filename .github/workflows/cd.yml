@@ -15,11 +15,8 @@ jobs:
 
       - name: Debug environment variables
         run: |
-          echo "SSH_HOSTNAME: ${{ env.SSH_HOSTNAME }}"  # Use env if it's a normal environment variable
-          echo "SSH_USERNAME: ${{ env.SSH_USERNAME }}"  # Use env if it's a normal environment variable
-          # If using secrets, then change to secrets
-          # echo "SSH_HOSTNAME: ${{ secrets.SSH_HOSTNAME }}"
-          # echo "SSH_USERNAME: ${{ secrets.SSH_USERNAME }}"
+          echo "SSH_HOSTNAME: ${{ env.SSH_HOSTNAME }}" 
+          echo "SSH_USERNAME: ${{ env.SSH_USERNAME }}"
 
 
       - name: Deploy to VPS
