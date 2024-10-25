@@ -23,8 +23,8 @@ jobs:
           port: 22
 
           script: |
-            docker pull ghcr.io/${{ github.repository }}:latest
+            
             cd /opt/as-built-dev
-            docker compose pull
             docker compose down
+            docker pull ghcr.io/${{ github.repository }}:latest
             docker compose up -d
