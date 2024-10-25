@@ -23,7 +23,7 @@ jobs:
           port: 22
 
           script: |
-            docker pull ghcr.io/${{ github.repository }}:latest
-            docker stop my-app || true
-            docker rm my-app || true
-            docker run -d --name my-app -p 80:80 ghcr.io/${{ github.repository }}:latest
+            cd /opt/as-built-dev
+            docker compose pull
+            docker compose down
+            docker compose up -d
