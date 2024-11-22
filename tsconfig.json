@@ -20,7 +20,7 @@
     "resolveJsonModule": true,
 
     "paths": {
-      "@auth/zitadel-auth/*": ["libs/zitadel-auth/src/*"]
+      "@auth/zitadel-auth/*": ["src/zitadel-auth/src/*"]
     }
   }
 }

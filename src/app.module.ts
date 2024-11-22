@@ -14,8 +14,9 @@ import { CommentsModule } from './comments/comments.module';
 import { FilesModule } from './files/files.module';
 import { StorageModule } from './storage/storage.module';
 import * as Joi from 'joi';
-import { ZitadelAuthModule } from '@auth/zitadel-auth/zitadel-auth.module';
-import { ZitadelAuthModuleConfig } from '@auth/zitadel-auth/index';
+import { ZitadelAuthModule } from './zitadel-auth/zitadel-auth.module';
+import { ZitadelAuthModuleConfig } from './zitadel-auth/interfaces/zitadel-auth-module-config.interface';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -102,6 +103,7 @@ import { ZitadelAuthModuleConfig } from '@auth/zitadel-auth/index';
     CommentsModule,
     FilesModule,
     StorageModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
