@@ -67,7 +67,6 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
     }),
 
-    // ZitadelAuthModule configuration
     ZitadelAuthModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService): ZitadelAuthModuleConfig => ({

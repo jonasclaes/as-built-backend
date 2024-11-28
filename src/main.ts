@@ -2,8 +2,6 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import {
-  ValidationPipe,
-  ValidationPipeOptions,
   ClassSerializerInterceptor,
   NestApplicationOptions,
 } from '@nestjs/common';
@@ -22,14 +20,6 @@ async function bootstrap() {
   // Enable CORS
   const corsOptions = {};
   app.enableCors(corsOptions);
-
-  // Set up validation globally
-  const validationOptions: ValidationPipeOptions = {
-    transform: true,
-    always: true,
-    forbidUnknownValues: true,
-  };
-  app.useGlobalPipes(new ValidationPipe(validationOptions));
 
   // Set up global interceptors
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
