@@ -46,6 +46,7 @@ jobs:
 
   integration-tests:
     runs-on: ubuntu-latest
+    NODE_ENV: test
     needs: unit-tests
     steps:
       - name: Checkout code
