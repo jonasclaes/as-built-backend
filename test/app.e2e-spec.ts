@@ -11,7 +11,7 @@ const globals = global as typeof globalThis & TestEnvironmentGlobals;
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     process.env.DATABASE_URL = globals.postgresContainer.getConnectionUri();
     process.env.STORAGE_ENDPOINT_URL =
       globals.minioContainer.getConnectionUri();
@@ -22,11 +22,8 @@ describe('AppController (e2e)', () => {
       imports: [AppModule],
     })
       .overrideGuard(AuthGuard('zitadel'))
-      .useValue({
-        canActivate: () => true,
-      })
+      .useValue({ canActivate: () => true })
       .compile();
-
     app = moduleFixture.createNestApplication();
     await app.init();
   });
