@@ -61,9 +61,6 @@ jobs:
 
       - name: Run integration tests
         run: npm run test:e2e
-        env:
-          OPENAPI_CLIENT_ID: ${{ secrets.OPENAPI_CLIENT_ID }}
-          OPENAPI_CLIENT_SECRET: ${{ secrets.OPENAPI_CLIENT_SECRET }}
 
   publish:
     runs-on: ubuntu-latest
