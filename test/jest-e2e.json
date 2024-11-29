@@ -1,9 +1,13 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
-  "testEnvironment": "./testEnvironment.ts",
+  "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@auth/zitadel-auth/(.*)": "<rootDir>/../libs/zitadel-auth/src/$1",
+    "@auth/zitadel-auth": "<rootDir>/../libs/zitadel-auth/src"
   }
 }
