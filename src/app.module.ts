@@ -49,7 +49,6 @@ import { UsersModule } from './users/users.module';
         IDP_AUTHORIZATION_PROFILE_KEY: Joi.string().required(),
         IDP_AUTHORIZATION_PROFILE_APP_ID: Joi.string().required(),
         IDP_AUTHORIZATION_PROFILE_CLIENT_ID: Joi.string().required(),
-        IDP_AUTHORIZATION_PROFILE_CLIENT_SECRET: Joi.string().required(),
       }),
       validationOptions: {
         abortEarly: true,
