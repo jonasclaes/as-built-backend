@@ -26,7 +26,6 @@ import { UsersModule } from './users/users.module';
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test', 'provision')
           .default('production'),
-        DATABASE_URL: Joi.string().required(),
         OPENAPI_CLIENT_ID: Joi.string().when('NODE_ENV', {
           is: 'production',
           then: Joi.optional(),
