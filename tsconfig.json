@@ -25,5 +25,5 @@
       "@auth/zitadel-auth/*": ["src/zitadel-auth/src/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "test/**/*"]
 }
