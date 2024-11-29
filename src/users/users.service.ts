@@ -1,17 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+  ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<AxiosResponse> {
-    const zitadelPat = this.configService.get<string>('ZITADEL_PAT');
-    if (!zitadelPat) {
-      throw new Error('ZITADEL_API_TOKEN is not set');
-    }
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const serviceUserToken = this.configService.get<string>(
+      'ZITADEL_SERVICE_USER_TOKEN',
+    );
+
     const { givenName, familyName, email } = createUserDto;
     const payload = {
       profile: {
@@ -30,13 +36,18 @@ export class UsersService {
         payload,
         {
           headers: {
-            Authorization: `Bearer ${zitadelPat}`,
+            Authorization: `Bearer ${serviceUserToken}`,
             'Content-Type': 'application/json',
           },
         },
       );
-      console.log('Response data:', response.data);
-      return response.data;
+
+      const { userId } = response.data;
+
+      const user = new User();
+      user.uid = userId;
+      await this.userRepository.save(user);
+      return user;
     } catch (error) {
       console.error(
         'API call error:',
