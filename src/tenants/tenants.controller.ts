@@ -39,4 +39,12 @@ export class TenantsController {
   remove(@Param('id') id: string) {
     return this.tenantsService.remove(+id);
   }
+
+  @Post(':uid')
+  async createPersonalTenant(
+    @Param('uid') uid: string,
+    @Body() createTenantDto: CreateTenantDto,
+  ) {
+    return this.tenantsService.createPersonalTenant(uid, createTenantDto);
+  }
 }

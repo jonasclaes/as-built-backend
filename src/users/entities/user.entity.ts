@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Tenant } from '../../tenants/entities/tenant.entity';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('user')
 export class User {
@@ -7,4 +8,7 @@ export class User {
 
   @Column()
   uid: string;
+
+  @ManyToMany(() => Tenant, (tenant) => tenant.users)
+  tenants: Tenant[];
 }

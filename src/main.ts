@@ -6,8 +6,6 @@ import {
   NestApplicationOptions,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as fs from 'fs';
-import * as path from 'path';
 import * as packageJson from '../package.json';
 
 async function bootstrap() {
@@ -64,8 +62,12 @@ async function bootstrap() {
     swaggerDocument.addServer(`http://localhost:${port}`);
     redirectUri = `http://localhost:${port}`;
   } else {
-    redirectUri = 'YOUR PROD URL HERE';
-    throw new Error('SET YOUR PROD URL HERE AND REMOVE THIS THROW');
+    const prodUrl = config.get<string>(
+      'PROD_URL',
+      'https://your-production-domain.com',
+    ); // Default value added for safety
+    redirectUri = prodUrl;
+    swaggerDocument.addServer(prodUrl);
   }
 
   // Generate Swagger document
@@ -81,14 +83,6 @@ async function bootstrap() {
       },
     },
   });
-
-  // Save Swagger JSON in non-production environments
-  if (config.get<string>('NODE_ENV') !== 'production') {
-    fs.writeFileSync(
-      path.join(__dirname, '..', 'swagger.json'),
-      JSON.stringify(document),
-    );
-  }
 
   // Start the application
   await app.listen(port);

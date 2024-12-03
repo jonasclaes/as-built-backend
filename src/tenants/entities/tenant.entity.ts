@@ -1,8 +1,11 @@
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -26,4 +29,11 @@ export class Tenant {
 
   @Column()
   connectionString: string;
+
+  @Column()
+  ownerUid: string;
+
+  @ManyToMany(() => User, (user) => user.tenants)
+  @JoinTable({ name: 'tenants_users' })
+  users: User[];
 }
