@@ -4,6 +4,7 @@ import { TenantsService } from './tenants.service';
 import { getDataSourceToken, getRepositoryToken } from '@nestjs/typeorm';
 import { Tenant } from './entities/tenant.entity';
 import { ConfigService } from '@nestjs/config';
+import { User } from '../users/entities/user.entity';
 
 describe('TenantsController', () => {
   let controller: TenantsController;
@@ -15,6 +16,10 @@ describe('TenantsController', () => {
         TenantsService,
         {
           provide: getRepositoryToken(Tenant),
+          useValue: {},
+        },
+        {
+          provide: getRepositoryToken(User),
           useValue: {},
         },
         {

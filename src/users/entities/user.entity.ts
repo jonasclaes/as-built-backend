@@ -1,5 +1,12 @@
 import { Tenant } from '../../tenants/entities/tenant.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Permission } from '../../permissions/entities/permission.entity';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('user')
 export class User {
@@ -11,4 +18,7 @@ export class User {
 
   @ManyToMany(() => Tenant, (tenant) => tenant.users)
   tenants: Tenant[];
+
+  @OneToMany(() => Permission, (permission) => permission.user)
+  permissions: Permission[];
 }

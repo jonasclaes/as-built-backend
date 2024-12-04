@@ -40,11 +40,11 @@ export class TenantsController {
     return this.tenantsService.remove(+id);
   }
 
-  @Post(':uid')
-  async createPersonalTenant(
+  @Post(':uid/tenants/:tenantId')
+  async assignTenant(
     @Param('uid') uid: string,
-    @Body() createTenantDto: CreateTenantDto,
+    @Param('tenantId') tenantId: number,
   ) {
-    return this.tenantsService.createPersonalTenant(uid, createTenantDto);
+    return this.tenantsService.assignTenantToUser(uid, tenantId);
   }
 }

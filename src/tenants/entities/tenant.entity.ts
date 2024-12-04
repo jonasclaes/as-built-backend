@@ -1,4 +1,5 @@
-import { User } from 'src/users/entities/user.entity';
+import { Permission } from '../../permissions/entities/permission.entity';
+import { User } from '../../users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -6,6 +7,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -30,10 +32,13 @@ export class Tenant {
   @Column()
   connectionString: string;
 
-  @Column()
+  @Column({ nullable: true })
   ownerUid: string;
 
   @ManyToMany(() => User, (user) => user.tenants)
   @JoinTable({ name: 'tenants_users' })
   users: User[];
+
+  @OneToMany(() => Permission, (permission) => permission.tenant)
+  permissions: Permission[];
 }

@@ -52,29 +52,25 @@ export class TenantsService {
     return this.tenantRepository.delete(id);
   }
 
-  async createPersonalTenant(uid: string, createTenantDto: CreateTenantDto) {
-    const user = await this.userRepository.findOneBy({ uid });
+  async assignTenantToUser(userUid: string, tenantId: number): Promise<Tenant> {
+    const user = await this.userRepository.findOne({
+      where: { uid: userUid },
+      relations: ['tenants'],
+    });
     if (!user) {
       throw new Error('User not found');
     }
-    await this.dataSource
-      .createQueryRunner()
-      .createDatabase(createTenantDto.name, false);
 
-    const systemDatabaseUrl = new URL(
-      this.configService.get('DATABASE_URL') ?? '',
-    );
-
-    systemDatabaseUrl.pathname = `/${createTenantDto.name}`;
-
-    createTenantDto.connectionString = systemDatabaseUrl.toString();
-
-    const tenant = new Tenant();
-    tenant.name = createTenantDto.name;
-    tenant.connectionString = createTenantDto.connectionString;
-    tenant.ownerUid = uid;
-    tenant.users = [user];
-
-    return await this.tenantRepository.save(tenant);
+    const tenant = await this.tenantRepository.findOne({
+      where: { id: tenantId },
+    });
+    if (!tenant) {
+      throw new Error('Tenant not found');
+    }
+    if (!user.tenants.some((t) => t.id === tenantId)) {
+      user.tenants.push(tenant);
+      await this.userRepository.save(user);
+    }
+    return tenant;
   }
 }
