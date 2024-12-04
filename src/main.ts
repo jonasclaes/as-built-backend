@@ -6,8 +6,6 @@ import {
   NestApplicationOptions,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as fs from 'fs';
-import * as path from 'path';
 import * as packageJson from '../package.json';
 
 async function bootstrap() {
