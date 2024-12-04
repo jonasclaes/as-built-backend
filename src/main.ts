@@ -68,7 +68,6 @@ async function bootstrap() {
     throw new Error('SET YOUR PROD URL HERE AND REMOVE THIS THROW');
   }
 
-  // Generate Swagger document
   const document = SwaggerModule.createDocument(app, swaggerDocument.build());
   SwaggerModule.setup(globalApiPrefix.slice(1), app, document, {
     swaggerOptions: {
@@ -82,15 +81,6 @@ async function bootstrap() {
     },
   });
 
-  // Save Swagger JSON in non-production environments
-  if (config.get<string>('NODE_ENV') !== 'production') {
-    fs.writeFileSync(
-      path.join(__dirname, '..', 'swagger.json'),
-      JSON.stringify(document),
-    );
-  }
-
-  // Start the application
   await app.listen(port);
 }
 
