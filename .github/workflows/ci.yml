@@ -61,14 +61,6 @@ jobs:
 
       - name: Run integration tests
         run: npm run test:e2e
-        env:
-          OPENAPI_CLIENT_ID: ${{ secrets.OPENAPI_CLIENT_ID }}
-          OPENAPI_CLIENT_SECRET: ${{ secrets.OPENAPI_CLIENT_SECRET }}
-          IDP_AUTHORITY: ${{ secrets.IDP_AUTHORITY }}
-          IDP_AUTHORIZATION_PROFILE_KEY_ID: ${{ secrets.IDP_AUTHORIZATION_PROFILE_KEY_ID }}
-          IDP_AUTHORIZATION_PROFILE_KEY: ${{ secrets.IDP_AUTHORIZATION_PROFILE_KEY }}
-          IDP_AUTHORIZATION_PROFILE_APP_ID: ${{ secrets.IDP_AUTHORIZATION_PROFILE_APP_ID }}
-          IDP_AUTHORIZATION_PROFILE_CLIENT_ID: ${{ secrets.IDP_AUTHORIZATION_PROFILE_CLIENT_ID }}
 
   publish:
     runs-on: ubuntu-latest
