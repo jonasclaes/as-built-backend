@@ -17,11 +17,11 @@ export class PermissionsService {
   ) {}
 
   async assignPermission(
-    userUid: string,
+    userId: number,
     tenantId: number,
     permissionName: string,
   ): Promise<Permission> {
-    const user = await this.userRepository.findOne({ where: { uid: userUid } });
+    const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new Error('User not found');
     }
@@ -36,18 +36,18 @@ export class PermissionsService {
     const permission = new Permission();
     permission.user = user;
     permission.tenant = tenant;
-    permission.permission = permissionName;
+    permission.name = permissionName;
 
     return await this.permissionRepository.save(permission);
   }
 
   async getPermissions(
-    userUid: string,
+    userId: number,
     tenantId: number,
   ): Promise<Permission[]> {
     return this.permissionRepository.find({
       where: {
-        user: { uid: userUid },
+        user: { id: userId },
         tenant: { id: tenantId },
       },
       relations: ['user', 'tenant'],

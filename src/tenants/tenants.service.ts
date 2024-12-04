@@ -52,9 +52,9 @@ export class TenantsService {
     return this.tenantRepository.delete(id);
   }
 
-  async assignTenantToUser(userUid: string, tenantId: number): Promise<Tenant> {
+  async assignTenantToUser(userId: number, tenantId: number): Promise<Tenant> {
     const user = await this.userRepository.findOne({
-      where: { uid: userUid },
+      where: { id: userId },
       relations: ['tenants'],
     });
     if (!user) {

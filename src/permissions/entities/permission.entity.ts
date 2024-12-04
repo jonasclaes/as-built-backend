@@ -1,20 +1,18 @@
-import { Tenant } from '../../tenants/entities/tenant.entity';
-import { User } from '../../users/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+import { Tenant } from '../../tenants/entities/tenant.entity';
 
-@Entity()
+@Entity('permissions')
 export class Permission {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.permissions, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.permissions)
   user: User;
 
-  @ManyToOne(() => Tenant, (tenant) => tenant.permissions, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(() => Tenant, (tenant) => tenant.permissions)
   tenant: Tenant;
 
   @Column()
-  permission: string;
+  name: string;
 }

@@ -1,29 +1,30 @@
 import { Controller, Post, Get, Delete, Param, Body } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
+import { CreatePermissionDto } from './dto/create-permission.dto';
 
 @Controller('permissions')
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
-  @Post(':uid/tenants/:tenantId')
+  @Post(':userId/tenants/:tenantId')
   async assignPermission(
-    @Param('uid') userUid: string,
+    @Param('userId') userId: number,
     @Param('tenantId') tenantId: number,
-    @Body('permissionName') permissionName: string,
+    @Body() createPermissionDto: CreatePermissionDto,
   ) {
     return this.permissionsService.assignPermission(
-      userUid,
+      userId,
       tenantId,
-      permissionName,
+      createPermissionDto.name,
     );
   }
 
-  @Get(':uid/tenants/:tenantId')
+  @Get(':userId/tenants/:tenantId')
   async getPermissions(
-    @Param('uid') userUid: string,
+    @Param('userId') userId: number,
     @Param('tenantId') tenantId: number,
   ) {
-    return this.permissionsService.getPermissions(userUid, tenantId);
+    return this.permissionsService.getPermissions(userId, tenantId);
   }
 
   @Delete(':id')
