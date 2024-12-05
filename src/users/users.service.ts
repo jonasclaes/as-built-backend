@@ -58,4 +58,49 @@ export class UsersService {
       );
     }
   }
+
+  async updateUser(uid: string, updateUserDto: CreateUserDto) {
+    const user = await this.userRepository.findOne({ where: { uid } });
+    if (!user) {
+      throw new Error('User not found in the local database');
+    }
+
+    const { givenName, familyName, email } = updateUserDto;
+    const payload = {
+      username: `${email}`,
+      profile: {
+        givenName,
+        familyName,
+        displayName: `${givenName} ${familyName}`,
+      },
+      email: {
+        email,
+        isVerified: true,
+      },
+    };
+
+    try {
+      const response = await axios.put(
+        `https://as-built-g0qzjy.us1.zitadel.cloud/v2/users/human/${uid}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${this.configService.get<string>(
+              'ZITADEL_SERVICE_USER_TOKEN',
+            )}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        'API call error:',
+        error.response ? error.response.data : error.message,
+      );
+      throw new Error(
+        error.response?.data?.message || 'Failed to update user in ZITADEL API',
+      );
+    }
+  }
 }
