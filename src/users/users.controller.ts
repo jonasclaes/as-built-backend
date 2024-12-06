@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('/users')
 export class UsersController {
@@ -24,7 +25,7 @@ export class UsersController {
   @UsePipes(new ValidationPipe())
   async updateUser(
     @Param('uid') uid: string,
-    @Body() updateUserDto: CreateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.userService.updateUser(uid, updateUserDto);
   }
