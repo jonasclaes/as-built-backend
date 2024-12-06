@@ -7,10 +7,11 @@ import { Revision } from '../revisions/entities/revision.entity';
 import { Comment } from '../comments/entities/comment.entity';
 
 import { File } from '../files/entities/file.entity';
+import { User } from '../users/entities/user.entity';
 
 export const ormConfig = {
   type: 'postgres',
-  entities: [Tenant, Client, Project, Revision, Comment, File],
+  entities: [Tenant, Client, Project, Revision, Comment, File, User],
   migrations: [join(__dirname, '../migrations/**/*.{ts,js}')],
   synchronize: false,
 } satisfies DataSourceOptions;

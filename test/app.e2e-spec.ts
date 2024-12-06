@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import * as process from 'node:process';
 import { TestEnvironmentGlobals } from './testEnvironment';
+import { AuthGuard } from '@nestjs/passport';
 
 const globals = global as typeof globalThis & TestEnvironmentGlobals;
 
@@ -19,8 +20,10 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-
+    })
+      .overrideGuard(AuthGuard('zitadel'))
+      .useValue({ canActivate: () => true })
+      .compile();
     app = moduleFixture.createNestApplication();
     await app.init();
   });

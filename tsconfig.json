@@ -10,12 +10,20 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true,
+    "incremental": false,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true
-  }
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+
+    "rootDir": "./src",
+
+    "paths": {
+      "@auth/zitadel-auth/*": ["src/zitadel-auth/src/*"]
+    }
+  },
+  "include": ["src/**/*"]
 }
