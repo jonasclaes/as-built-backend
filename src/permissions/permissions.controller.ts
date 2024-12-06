@@ -1,6 +1,7 @@
 import { Controller, Post, Get, Delete, Param, Body } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
+import { PermissionName } from './entities/permissions.enum';
 
 @Controller('permissions')
 export class PermissionsController {
@@ -15,7 +16,7 @@ export class PermissionsController {
     return this.permissionsService.assignPermission(
       userId,
       tenantId,
-      createPermissionDto.name,
+      createPermissionDto.name as PermissionName,
     );
   }
 

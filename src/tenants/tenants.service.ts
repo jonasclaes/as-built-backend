@@ -60,15 +60,17 @@ export class TenantsService {
     if (!user) {
       throw new Error('User not found');
     }
-
     const tenant = await this.tenantRepository.findOne({
       where: { id: tenantId },
+      relations: ['owner'],
     });
     if (!tenant) {
       throw new Error('Tenant not found');
     }
+    tenant.owner = user;
+    await this.tenantRepository.save(tenant);
     if (!user.tenants.some((t) => t.id === tenantId)) {
-      user.tenants.push(tenant);
+      user.tenants.push({ id: tenantId } as Tenant);
       await this.userRepository.save(user);
     }
     return tenant;

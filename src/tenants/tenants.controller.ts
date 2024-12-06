@@ -10,6 +10,7 @@ import {
 import { TenantsService } from './tenants.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
+import { ApiBody } from '@nestjs/swagger';
 
 @Controller('tenants')
 export class TenantsController {
@@ -40,10 +41,16 @@ export class TenantsController {
     return this.tenantsService.remove(+id);
   }
 
-  @Post(':userId/tenants/:tenantId')
-  async assignTenant(
-    @Param('userId') userId: number,
-    @Param('tenantId') tenantId: number,
+  @Post('assign')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: { userId: { type: 'number' }, tenantId: { type: 'number' } },
+    },
+  })
+  async assignTenantToUser(
+    @Body('userId') userId: number,
+    @Body('tenantId') tenantId: number,
   ) {
     return this.tenantsService.assignTenantToUser(userId, tenantId);
   }

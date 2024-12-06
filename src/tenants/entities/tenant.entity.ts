@@ -7,6 +7,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -32,8 +33,8 @@ export class Tenant {
   @Column()
   connectionString: string;
 
-  @Column({ nullable: true })
-  ownerUid: string;
+  @ManyToOne(() => User)
+  owner: User;
 
   @ManyToMany(() => User, (user) => user.tenants)
   @JoinTable({ name: 'tenants_users' })

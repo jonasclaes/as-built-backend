@@ -1,6 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Tenant } from '../../tenants/entities/tenant.entity';
+import { PermissionName } from './permissions.enum';
 
 @Entity('permissions')
 export class Permission {
@@ -13,6 +14,9 @@ export class Permission {
   @ManyToOne(() => Tenant, (tenant) => tenant.permissions)
   tenant: Tenant;
 
-  @Column()
-  name: string;
+  @Column({
+    type: 'enum',
+    enum: PermissionName,
+  })
+  name: PermissionName;
 }
