@@ -6,7 +6,13 @@ describe('PermissionsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PermissionsService],
+      providers: [
+        PermissionsService,
+        {
+          provide: PermissionsService,
+          useValue: {},
+        },
+      ],
     }).compile();
 
     service = module.get<PermissionsService>(PermissionsService);
