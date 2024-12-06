@@ -70,7 +70,6 @@ async function bootstrap() {
     swaggerDocument.addServer(prodUrl);
   }
 
-  // Generate Swagger document
   const document = SwaggerModule.createDocument(app, swaggerDocument.build());
   SwaggerModule.setup(globalApiPrefix.slice(1), app, document, {
     swaggerOptions: {
@@ -84,7 +83,6 @@ async function bootstrap() {
     },
   });
 
-  // Start the application
   await app.listen(port);
 }
 

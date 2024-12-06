@@ -25,5 +25,4 @@ jobs:
           script: |
             cd /opt/as-built-dev
             docker compose down
-            docker pull ghcr.io/${{ github.repository }}:latest
             docker compose up -d
