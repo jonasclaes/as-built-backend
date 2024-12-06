@@ -15,15 +15,6 @@ describe('AppController (e2e)', () => {
     process.env.DATABASE_URL = globals.postgresContainer.getConnectionUri();
     process.env.STORAGE_ENDPOINT_URL =
       globals.minioContainer.getConnectionUri();
-    process.env.OPENAPI_CLIENT_ID = 'test';
-    process.env.OPENAPI_CLIENT_SECRET = 'test';
-    process.env.IDP_AUTHORITY = 'https://test.us1.zitadel.cloud';
-    process.env.IDP_AUTHORIZATION_TYPE = 'jwt-profile';
-    process.env.IDP_AUTHORIZATION_PROFILE_TYPE = 'application';
-    process.env.IDP_AUTHORIZATION_PROFILE_KEY_ID = 'test';
-    process.env.IDP_AUTHORIZATION_PROFILE_KEY = 'test';
-    process.env.IDP_AUTHORIZATION_PROFILE_APP_ID = 'test';
-    process.env.IDP_AUTHORIZATION_PROFILE_CLIENT_ID = 'test';
   });
 
   beforeEach(async () => {
