@@ -39,4 +39,12 @@ export class TenantsController {
   remove(@Param('id') id: string) {
     return this.tenantsService.remove(+id);
   }
+
+  @Post('assign')
+  async assignTenantToUser(
+    @Body('userId') userId: number,
+    @Body('tenantId') tenantId: number,
+  ) {
+    return this.tenantsService.assignTenantToUser(userId, tenantId);
+  }
 }

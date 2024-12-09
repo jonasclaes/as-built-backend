@@ -17,6 +17,7 @@ import * as Joi from 'joi';
 import { ZitadelAuthModule } from './zitadel-auth/zitadel-auth.module';
 import { ZitadelAuthModuleConfig } from './zitadel-auth/interfaces/zitadel-auth-module-config.interface';
 import { UsersModule } from './users/users.module';
+import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
   imports: [
@@ -102,6 +103,7 @@ import { UsersModule } from './users/users.module';
     FilesModule,
     StorageModule,
     UsersModule,
+    PermissionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
