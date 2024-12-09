@@ -15,6 +15,17 @@ describe('AppController (e2e)', () => {
     process.env.DATABASE_URL = globals.postgresContainer.getConnectionUri();
     process.env.STORAGE_ENDPOINT_URL =
       globals.minioContainer.getConnectionUri();
+    const OPENAPI_CLIENT = process.env.OPENAPI_CLIENT;
+    const OPENAPI_CLIENT_SECRET = process.env.OPENAPI_CLIENT_SECRET;
+    const IDP_AUTHORITY = process.env.IDP_AUTHORITY;
+    const IDP_AUTHORIZATION_PROFILE_KEY_ID =
+      process.env.IDP_AUTHORIZATION_PROFILE_KEY_ID;
+    const IDP_AUTHORIZATION_PROFILE_KEY =
+      process.env.IDP_AUTHORIZATION_PROFILE_KEY;
+    const IDP_AUTHORIZATION_PROFILE_APP_ID =
+      process.env.IDP_AUTHORIZATION_PROFILE_APP_ID;
+    const IDP_AUTHORIZATION_PROFILE_CLIENT_ID =
+      process.env.IDP_AUTHORIZATION_PROFILE_CLIENT_ID;
   });
 
   beforeEach(async () => {

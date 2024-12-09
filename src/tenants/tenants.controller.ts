@@ -10,7 +10,6 @@ import {
 import { TenantsService } from './tenants.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
-import { ApiBody } from '@nestjs/swagger';
 
 @Controller('tenants')
 export class TenantsController {
@@ -42,12 +41,6 @@ export class TenantsController {
   }
 
   @Post('assign')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: { userId: { type: 'number' }, tenantId: { type: 'number' } },
-    },
-  })
   async assignTenantToUser(
     @Body('userId') userId: number,
     @Body('tenantId') tenantId: number,
