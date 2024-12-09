@@ -13,11 +13,12 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const serviceUserToken = this.configService.get<string>(
-      'ZITADEL_SERVICE_USER_TOKEN',
-    );
+  url = this.configService.getOrThrow<string>('IDP_AUTHORITY');
+  serviceUserToken = this.configService.getOrThrow<string>(
+    'ZITADEL_SERVICE_USER_TOKEN',
+  );
 
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { givenName, familyName, email } = createUserDto;
     const payload = {
       profile: {
@@ -35,16 +36,12 @@ export class UsersService {
     };
 
     try {
-      const response = await axios.post(
-        'https://as-built-g0qzjy.us1.zitadel.cloud/v2/users/human',
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${serviceUserToken}`,
-            'Content-Type': 'application/json',
-          },
+      const response = await axios.post(`${this.url}/v2/users/human`, payload, {
+        headers: {
+          Authorization: `Bearer ${this.serviceUserToken}`,
+          'Content-Type': 'application/json',
         },
-      );
+      });
 
       const { userId } = response.data;
 
@@ -85,13 +82,11 @@ export class UsersService {
 
     try {
       const response = await axios.put(
-        `https://as-built-g0qzjy.us1.zitadel.cloud/v2/users/human/${uid}`,
+        `${this.url}/v2/users/human/${uid}`,
         payload,
         {
           headers: {
-            Authorization: `Bearer ${this.configService.get<string>(
-              'ZITADEL_SERVICE_USER_TOKEN',
-            )}`,
+            Authorization: `Bearer ${this.serviceUserToken}`,
             'Content-Type': 'application/json',
           },
         },
@@ -108,88 +103,36 @@ export class UsersService {
     }
   }
 
-  async requestPasswordReset(uid: string): Promise<string> {
-    const serviceUserToken = this.configService.get<string>(
-      'ZITADEL_SERVICE_USER_TOKEN',
-    );
-
-    const payload = {
-      returnCode: {},
-    };
-
-    try {
-      const response = await axios.post(
-        `https://as-built-g0qzjy.us1.zitadel.cloud/v2/users/${uid}/password_reset`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${serviceUserToken}`,
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-
-      console.log('Password reset response:', response.data);
-      const verificationCode = response.data?.verificationCode;
-      if (!verificationCode) {
-        throw new Error('No verification code returned');
-      }
-
-      return verificationCode;
-    } catch (error) {
-      if (error.response) {
-        console.error('API call error:', error.response.data);
-        throw new Error(
-          `Failed to request password reset: ${error.response.data.message || 'Unknown error'}`,
-        );
-      }
-      console.error('Error:', error.message);
-      throw new Error('Failed to request password reset');
-    }
-  }
-
-  async changeUserPassword(
-    uid: string,
-    password: string,
-    currentPassword: string,
-    verificationCode: string,
-  ) {
+  async requestPasswordReset(uid: string) {
     const user = await this.userRepository.findOne({ where: { uid } });
     if (!user) {
-      throw new Error('User not found in the local database');
+      throw new Error('User not found in database');
     }
-
     const payload = {
-      newPassword: {
-        password: password,
-        changeRequired: true,
+      sendLink: {
+        notificationType: 'NOTIFICATION_TYPE_Email',
       },
-      ...(verificationCode && { verificationCode }),
-      ...(currentPassword && !verificationCode && { currentPassword }),
     };
-
     try {
       const response = await axios.post(
-        `https://as-built-g0qzjy.us1.zitadel.cloud/v2/users/${uid}/password`,
+        `${this.url}/v2/users/${uid}/password_reset`,
         payload,
         {
           headers: {
-            Authorization: `Bearer ${this.configService.get<string>('ZITADEL_SERVICE_USER_TOKEN')}`,
+            Authorization: `Bearer ${this.serviceUserToken}`,
             'Content-Type': 'application/json',
           },
         },
       );
-
       return response.data;
     } catch (error) {
-      if (error.response) {
-        console.error('API call error:', error.response.data);
-        throw new Error(
-          `Failed to change password: ${error.response.data.message || 'Unknown error'}`,
-        );
-      }
-      console.error('Error:', error.message);
-      throw new Error('Failed to update password in ZITADEL API');
+      console.error(
+        'API call error:',
+        error.response ? error.response.data : error.message,
+      );
+      throw new Error(
+        error.response?.data || 'Failed to reset user password in ZITADEL API',
+      );
     }
   }
 }
