@@ -13,11 +13,12 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const serviceUserToken = this.configService.get<string>(
-      'ZITADEL_SERVICE_USER_TOKEN',
-    );
+  url = this.configService.getOrThrow<string>('IDP_AUTHORITY');
+  serviceUserToken = this.configService.getOrThrow<string>(
+    'ZITADEL_SERVICE_USER_TOKEN',
+  );
 
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { givenName, familyName, email } = createUserDto;
     const payload = {
       profile: {
@@ -28,19 +29,19 @@ export class UsersService {
         email,
         isVerified: true,
       },
+      password: {
+        password: 'defaultPassword123.',
+        changeRequired: true,
+      },
     };
 
     try {
-      const response = await axios.post(
-        'https://as-built-g0qzjy.us1.zitadel.cloud/v2/users/human',
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${serviceUserToken}`,
-            'Content-Type': 'application/json',
-          },
+      const response = await axios.post(`${this.url}/v2/users/human`, payload, {
+        headers: {
+          Authorization: `Bearer ${this.serviceUserToken}`,
+          'Content-Type': 'application/json',
         },
-      );
+      });
 
       const { userId } = response.data;
 
@@ -55,6 +56,82 @@ export class UsersService {
       );
       throw new Error(
         error.response?.data || 'Failed to create user in ZITADEL API',
+      );
+    }
+  }
+
+  async updateUser(uid: string, updateUserDto: CreateUserDto) {
+    const user = await this.userRepository.findOne({ where: { uid } });
+    if (!user) {
+      throw new Error('User not found in the local database');
+    }
+
+    const { givenName, familyName, email } = updateUserDto;
+    const payload = {
+      username: `${email}`,
+      profile: {
+        givenName,
+        familyName,
+        displayName: `${givenName} ${familyName}`,
+      },
+      email: {
+        email,
+        isVerified: true,
+      },
+    };
+
+    try {
+      const response = await axios.put(
+        `${this.url}/v2/users/human/${uid}`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${this.serviceUserToken}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        'API call error:',
+        error.response ? error.response.data : error.message,
+      );
+      throw new Error(
+        error.response?.data?.message || 'Failed to update user in ZITADEL API',
+      );
+    }
+  }
+
+  async requestPasswordReset(uid: string) {
+    const user = await this.userRepository.findOne({ where: { uid } });
+    if (!user) {
+      throw new Error('User not found in database');
+    }
+    const payload = {
+      sendLink: {
+        notificationType: 'NOTIFICATION_TYPE_Email',
+      },
+    };
+    try {
+      const response = await axios.post(
+        `${this.url}/v2/users/${uid}/password_reset`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${this.serviceUserToken}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        'API call error:',
+        error.response ? error.response.data : error.message,
+      );
+      throw new Error(
+        error.response?.data || 'Failed to reset user password in ZITADEL API',
       );
     }
   }
