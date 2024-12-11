@@ -19,7 +19,7 @@ export class UsersController {
     return this.userService.updateUser(uid, updateUserDto);
   }
 
-  @Post('/RequestPasswordReset/:uid')
+  @Post('/:uid/reset-password')
   async requestPassWordReset(@Param('uid') uid: string) {
     return this.userService.requestPasswordReset(uid);
   }

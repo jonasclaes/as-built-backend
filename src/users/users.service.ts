@@ -29,10 +29,6 @@ export class UsersService {
         email,
         isVerified: true,
       },
-      password: {
-        password: 'defaultPassword123.',
-        changeRequired: true,
-      },
     };
 
     try {
