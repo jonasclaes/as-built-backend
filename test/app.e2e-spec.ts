@@ -12,9 +12,6 @@ describe('AppController (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
-    process.env.DATABASE_URL = globals.postgresContainer.getConnectionUri();
-    process.env.STORAGE_ENDPOINT_URL =
-      globals.minioContainer.getConnectionUri();
     process.env.OPENAPI_CLIENT_ID = 'test-client-id';
     process.env.OPENAPI_CLIENT_SECRET = 'test-client-secret';
     process.env.IDP_AUTHORITY = 'http://test-idp-authority';
@@ -22,6 +19,10 @@ describe('AppController (e2e)', () => {
     process.env.IDP_AUTHORIZATION_PROFILE_KEY = 'test-key';
     process.env.IDP_AUTHORIZATION_PROFILE_APP_ID = 'test-app-id';
     process.env.IDP_AUTHORIZATION_PROFILE_CLIENT_ID = 'test-client-id';
+
+    process.env.DATABASE_URL = globals.postgresContainer.getConnectionUri();
+    process.env.STORAGE_ENDPOINT_URL =
+      globals.minioContainer.getConnectionUri();
   });
 
   beforeEach(async () => {
@@ -36,7 +37,9 @@ describe('AppController (e2e)', () => {
   });
 
   afterEach(async () => {
-    await app.close();
+    if (app) {
+      await app.close();
+    }
   });
 
   it('/ (GET)', () => {
