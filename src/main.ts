@@ -13,7 +13,7 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug', 'log'],
   };
 
-  const app = await NestFactory.create(AppModule, appOptions);
+  const app = await NestFactory.create(AppModule.register(), appOptions);
 
   // Enable CORS
   const corsOptions = {};
