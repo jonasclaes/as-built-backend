@@ -8,6 +8,8 @@ import { AuthGuard } from '@nestjs/passport';
 
 const globals = global as typeof globalThis & TestEnvironmentGlobals;
 
+process.env.OPENAPI_CLIENT_ID = '123';
+
 describe('AppController (e2e)', () => {
   let app: INestApplication;
 
@@ -15,7 +17,6 @@ describe('AppController (e2e)', () => {
     process.env.DATABASE_URL = globals.postgresContainer.getConnectionUri();
     process.env.STORAGE_ENDPOINT_URL =
       globals.minioContainer.getConnectionUri();
-    process.env.OPENAPI_CLIENT_ID = '123';
   });
 
   beforeEach(async () => {
