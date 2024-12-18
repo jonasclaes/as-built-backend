@@ -15,6 +15,7 @@ describe('AppController (e2e)', () => {
     process.env.DATABASE_URL = globals.postgresContainer.getConnectionUri();
     process.env.STORAGE_ENDPOINT_URL =
       globals.minioContainer.getConnectionUri();
+    process.env.OPENAPI_CLIENT_ID = "123";
   });
 
   beforeEach(async () => {
