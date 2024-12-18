@@ -5,10 +5,11 @@ import { AppModule } from '../src/app.module';
 import * as process from 'node:process';
 import { TestEnvironmentGlobals } from './testEnvironment';
 import { AuthGuard } from '@nestjs/passport';
+import * as dotenv from 'dotenv';
 
 const globals = global as typeof globalThis & TestEnvironmentGlobals;
 
-process.env.OPENAPI_CLIENT_ID = '123';
+dotenv.config({ path: '.env.test' });
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
