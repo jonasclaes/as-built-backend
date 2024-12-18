@@ -19,11 +19,11 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
 
-    "rootDir": "./src",
+    "rootDir": "./",
 
     "paths": {
       "@auth/zitadel-auth/*": ["src/zitadel-auth/src/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "test/**/*.ts"]
 }

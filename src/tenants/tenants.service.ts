@@ -5,12 +5,15 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { Tenant } from './entities/tenant.entity';
 import { DataSource, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class TenantsService {
   constructor(
     @InjectRepository(Tenant)
     private readonly tenantRepository: Repository<Tenant>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     @InjectDataSource()
     private readonly dataSource: DataSource,
     private readonly configService: ConfigService,
@@ -47,5 +50,29 @@ export class TenantsService {
   remove(id: number) {
     // FIXME: Add handling to drop the database
     return this.tenantRepository.delete(id);
+  }
+
+  async assignTenantToUser(userId: number, tenantId: number): Promise<Tenant> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['tenants'],
+    });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const tenant = await this.tenantRepository.findOne({
+      where: { id: tenantId },
+      relations: ['owner'],
+    });
+    if (!tenant) {
+      throw new Error('Tenant not found');
+    }
+    tenant.owner = user;
+    await this.tenantRepository.save(tenant);
+    if (!user.tenants.some((t) => t.id === tenantId)) {
+      user.tenants.push({ id: tenantId } as Tenant);
+      await this.userRepository.save(user);
+    }
+    return tenant;
   }
 }
