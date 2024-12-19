@@ -25,4 +25,5 @@ jobs:
           script: |
             cd /opt/as-built-dev
             docker compose down
-            docker compose up -d
+            docker compose up -d --pull always
+            docker image prune -f
