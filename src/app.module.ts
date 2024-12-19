@@ -98,7 +98,6 @@ export class AppModule {
           inject: [ConfigService],
         }),
 
-export class AppModule {}
         ClientsModule,
         TenancyModule,
         ProjectsModule,
@@ -116,4 +115,3 @@ export class AppModule {}
     };
   }
 }
-
