@@ -1,10 +1,24 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Tenant } from '../../tenants/entities/tenant.entity';
+import { Permission } from '../../permissions/entities/permission.entity';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity('user')
+@Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   uid: string;
+
+  @ManyToMany(() => Tenant, (tenant) => tenant.users)
+  tenants: Tenant[];
+
+  @OneToMany(() => Permission, (permission) => permission.user)
+  permissions: Permission[];
 }

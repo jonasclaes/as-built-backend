@@ -13,7 +13,7 @@ async function bootstrap() {
     logger: ['error', 'warn', 'debug', 'log'],
   };
 
-  const app = await NestFactory.create(AppModule, appOptions);
+  const app = await NestFactory.create(AppModule.register(), appOptions);
 
   // Enable CORS
   const corsOptions = {};
@@ -62,8 +62,12 @@ async function bootstrap() {
     swaggerDocument.addServer(`http://localhost:${port}`);
     redirectUri = `http://localhost:${port}`;
   } else {
-    redirectUri = 'YOUR PROD URL HERE';
-    throw new Error('SET YOUR PROD URL HERE AND REMOVE THIS THROW');
+    const prodUrl = config.get<string>(
+      'PROD_URL',
+      'https://your-production-domain.com',
+    ); // Default value added for safety
+    redirectUri = prodUrl;
+    swaggerDocument.addServer(prodUrl);
   }
 
   const document = SwaggerModule.createDocument(app, swaggerDocument.build());
