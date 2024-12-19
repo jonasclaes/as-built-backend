@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -56,13 +57,14 @@ export class UsersService {
     }
   }
 
-  async updateUser(uid: string, updateUserDto: CreateUserDto) {
+  async updateUser(uid: string, updateUserDto: UpdateUserDto) {
     const user = await this.userRepository.findOne({ where: { uid } });
     if (!user) {
       throw new Error('User not found in the local database');
     }
 
     const { givenName, familyName, email } = updateUserDto;
+
     const payload = {
       username: `${email}`,
       profile: {
