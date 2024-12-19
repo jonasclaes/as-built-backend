@@ -15,7 +15,7 @@ export class UsersService {
   ) {}
 
   url = this.configService.getOrThrow<string>('IDP_AUTHORITY');
-  serviceUserToken = this.configService.getOrThrow<string>(
+  serviceUserToken = this.configService.get<string>(
     'ZITADEL_SERVICE_USER_TOKEN',
   );
 
