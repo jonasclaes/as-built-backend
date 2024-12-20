@@ -23,7 +23,7 @@ FROM node:20-slim as production
 WORKDIR /app
 
 # Copy only the built output and package files from the build stage
-COPY --from=build /app/dist ./dist
+COPY --from=build /app/dist /app/dist
 COPY --from=build /app/package*.json ./
 
 # Install only production dependencies
